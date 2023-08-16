@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "companies",
+  "info": {
+    "singularName": "company",
+    "pluralName": "companies",
+    "displayName": "Company",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "company_name": {
+      "type": "string",
+      "unique": false,
+      "required": true
+    },
+    "company_email": {
+      "type": "email",
+      "unique": false,
+      "required": true
+    },
+    "company_password": {
+      "type": "password",
+      "required": true,
+      "minLength": 8
+    },
+    "company_abn": {
+      "type": "float"
+    },
+    "company_id": {
+      "type": "uid",
+      "required": true
+    }
+  }
+}
