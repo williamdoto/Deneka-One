@@ -4,7 +4,8 @@
   "info": {
     "singularName": "company-role",
     "pluralName": "company-roles",
-    "displayName": "Company Role"
+    "displayName": "Company Role",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -19,6 +20,14 @@
       "relation": "manyToOne",
       "target": "api::company.company",
       "inversedBy": "company_roles"
+    },
+    "role_permissions": {
+      "type": "enumeration",
+      "enum": [
+        "Company Owner",
+        "Administrator",
+        "Employee"
+      ]
     }
   }
 }

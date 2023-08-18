@@ -13,22 +13,28 @@
   "pluginOptions": {},
   "attributes": {
     "employee_email": {
-      "type": "email"
+      "type": "email",
+      "required": true
     },
     "employee_name": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "minLength": 2
     },
     "employee_join_date": {
-      "type": "date"
+      "type": "date",
+      "required": true
     },
     "employee_birth_date": {
       "type": "date"
     },
     "employee_id": {
-      "type": "uid"
+      "type": "uid",
+      "required": true
     },
     "employee_phone": {
-      "type": "integer"
+      "type": "integer",
+      "required": true
     },
     "employee_address": {
       "type": "string"
@@ -37,6 +43,12 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::company.company"
+    },
+    "employee_password": {
+      "type": "string",
+      "private": true,
+      "minLength": 8,
+      "required": true
     }
   }
 }
