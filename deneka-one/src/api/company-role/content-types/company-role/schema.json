@@ -28,6 +28,12 @@
         "Administrator",
         "Employee"
       ]
+    },
+    "employees": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::employee.employee",
+      "mappedBy": "company_role"
     }
   }
 }

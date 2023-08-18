@@ -49,6 +49,12 @@
       "private": true,
       "minLength": 8,
       "required": true
+    },
+    "company_role": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::company-role.company-role",
+      "inversedBy": "employees"
     }
   }
 }
