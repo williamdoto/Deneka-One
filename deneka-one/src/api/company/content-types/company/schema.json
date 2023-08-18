@@ -33,6 +33,23 @@
     "company_id": {
       "type": "uid",
       "required": true
+    },
+    "employees": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::employee.employee"
+    },
+    "company_roles": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::company-role.company-role",
+      "mappedBy": "company"
+    },
+    "devices": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::device.device",
+      "mappedBy": "company"
     }
   }
 }

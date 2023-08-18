@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "company_roles",
+  "info": {
+    "singularName": "company-role",
+    "pluralName": "company-roles",
+    "displayName": "Company Role"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "role_name": {
+      "type": "string"
+    },
+    "company": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::company.company",
+      "inversedBy": "company_roles"
+    }
+  }
+}

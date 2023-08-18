@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "employees",
+  "info": {
+    "singularName": "employee",
+    "pluralName": "employees",
+    "displayName": "Employee",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "employee_email": {
+      "type": "email"
+    },
+    "employee_name": {
+      "type": "string"
+    },
+    "employee_join_date": {
+      "type": "date"
+    },
+    "employee_birth_date": {
+      "type": "date"
+    },
+    "employee_id": {
+      "type": "uid"
+    },
+    "employee_phone": {
+      "type": "integer"
+    },
+    "employee_address": {
+      "type": "string"
+    },
+    "company": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::company.company"
+    }
+  }
+}
