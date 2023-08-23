@@ -1,4 +1,4 @@
-import { Card, Form, Input, Select, Button, Checkbox } from 'antd';
+import { Card, Form, Input, Select, Button} from 'antd';
 import React, { useState, useEffect } from 'react';
 import videoSrc from '../img_video/pexels-andre-moura-4021521.jpg';  
 import videoSrc2 from '../img_video/pexels-ryutaro-tsukata-6249808.jpg';
@@ -6,7 +6,7 @@ import 'font-awesome/css/font-awesome.min.css';
 
 const { Option } = Select;
 
-const SigninPage = () => {
+const ForgotpasswordPage = () => {
   const [form] = Form.useForm();
   const [currentImage, setCurrentImage] = useState(videoSrc);
 
@@ -38,7 +38,7 @@ const SigninPage = () => {
             }} />
           </div>
             <div style={{ flex: 4, padding: '20px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <h2 style={{ textAlign: 'center' }}>Sign In</h2>
+              <h2 style={{ textAlign: 'center' }}>Forgot Password</h2>
                 <Form form={form} onFinish={handleSubmit} layout="vertical" >
                   <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please input your email!', type: 'email' }]}>
                     <div style={{ position: 'relative' }}>
@@ -46,21 +46,10 @@ const SigninPage = () => {
                       <Input style={{ paddingLeft: '30px' }} placeholder="Email" />
                     </div>
                   </Form.Item>
-                  <Form.Item label="Passwords" name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
-                    <div style={{ position: 'relative' }}>
-                      <i className="fa fa-unlock-alt" aria-hidden="true" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'lightgrey', zIndex: 1000 }}></i>
-                      <Input style={{ paddingLeft: '30px' }} placeholder="password" />
-                    </div>
-                  </Form.Item>
                   <Form.Item>
                     <Button type="primary" htmlType="submit" style={{ width: '100%', backgroundColor: 'purple', borderColor: 'purple' }}>
                       Confirm
                     </Button>
-                    <div style={{ textAlign: 'right' }}> 
-                      <span style={{ cursor: 'pointer', color: 'blue' }} onClick={() => { /* your click handler code here */ }}>
-                        Forgot Password?
-                      </span>
-                    </div>
                   </Form.Item>
                 </Form>
             </div>
@@ -70,4 +59,4 @@ const SigninPage = () => {
   );
 };
 
-export default SigninPage
+export default ForgotpasswordPage;
