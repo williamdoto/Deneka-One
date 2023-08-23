@@ -10,6 +10,7 @@ import AuthProvider from './pages/AuthProvider/AuthProvider';
 import React from "react";
 import { Col, Layout, Row } from "antd";
 import AppHeader from "./pages/Appheader/Appheader";
+import ForgotpasswordPage from './pages/ForgotPasswordPage';
 // import AppRoutes from "./Routes";
 const { Header, Content } = Layout;
 
@@ -18,6 +19,7 @@ const AppRoutes = () => {
         <Routes>
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/signin" element={<SigninPage />} />
+          <Route path="/forgotpassword" element={<ForgotpasswordPage />} />
           <Route path="/" element={
             <ProtectedRoute>
               <HomePage />
