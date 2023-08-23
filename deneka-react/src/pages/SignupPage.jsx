@@ -81,25 +81,25 @@ const SignupPage = () => {
                     </div>
                   </Form.Item>
 
-                  <Form.Item label="Company Name" name="companyName" rules={[{ required: true, message: 'Please input your company name!' }]}>
+                  <Form.Item name="companyName" rules={[{ required: true, message: 'Please input your company name!' }]}>
                     <div style={{ position: 'relative' }}>
                       <i className="fa fa-building-o" aria-hidden="true" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'lightgrey', zIndex: 1000 }}></i>
-                      <Input style={{ paddingLeft: '30px' }} placeholder="Company Name" />
+                      <Input style={{ paddingLeft: '30px' }} placeholder="Company Name *" />
                     </div>
                   </Form.Item>
-                  <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please input your email!', type: 'email' }]}>
+                  <Form.Item name="email" rules={[{ required: true, message: 'Please input your email!', type: 'email' }]}>
                     <div style={{ position: 'relative' }}>
                       <i className="fa fa-envelope-o" aria-hidden="true" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'lightgrey', zIndex: 1000 }}></i>
-                      <Input style={{ paddingLeft: '30px' }} placeholder="Email" />
+                      <Input style={{ paddingLeft: '30px' }} placeholder="Email *" />
                     </div>
                   </Form.Item>
-                  <Form.Item label="Business Address" name="address" rules={[{ required: true, message: 'Please input your business address!' }]}>
+                  <Form.Item name="address" rules={[{ required: true, message: 'Please input your business address!' }]}>
                     <div style={{ position: 'relative' }}>
                       <i className="fa fa-map-marker" aria-hidden="true" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'lightgrey', zIndex: 1000 }}></i>
                       <Input style={{ paddingLeft: '30px' }} placeholder="Business Address" />
                     </div>
                   </Form.Item>
-                  <Form.Item label="Location" name="location" rules={[{ required: true, message: 'Please select your location!' }]}>
+                  <Form.Item name="location" rules={[{ required: true, message: 'Please select your location!' }]}>
                     <div style={{ position: 'relative' }}>
                       <i className="fa fa-location-arrow" aria-hidden="true" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' , color: 'lightgrey', zIndex: 1000}}></i>
                       <Select style={{ paddingLeft: '30px' }} placeholder="Select Location">
