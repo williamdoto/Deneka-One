@@ -7,6 +7,7 @@ import SigninPage from './pages/SigninPage';
 import HomePage from './pages/HomePage';
 import { ProtectedRoute } from './pages/ProtectedRoute';
 import AuthProvider from './pages/AuthProvider/AuthProvider';
+import ForgotpasswordPage from './pages/ForgotPasswordPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/signin" element={<SigninPage />} />
+          <Route path="/forgotpassword" element={<ForgotpasswordPage />} />
           <Route path="/" element={
             <ProtectedRoute>
               <HomePage />
