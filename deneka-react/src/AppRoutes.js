@@ -10,22 +10,22 @@ import AuthProvider from './pages/AuthProvider/AuthProvider';
 import React from "react";
 import { Col, Layout, Row } from "antd";
 import AppHeader from "./pages/Appheader/Appheader";
-import AppRoutes from "./AppRoutes"
 // import AppRoutes from "./Routes";
 const { Header, Content } = Layout;
 
-function App() {
-  return (
-    <Layout>
-      <Header>
-        <AppHeader />
-      </Header>
-      <Content>
-                <AppRoutes />
-              </Content>
-    </Layout>
-  );
-}
-
-export default App;
-
+const AppRoutes = () => {
+    return (
+        <Routes>
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/signin" element={<SigninPage />} />
+          <Route path="/" element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          } />
+          {/* Add more protected routes as needed */}
+        </Routes>
+    );
+  };
+  
+  export default AppRoutes;
