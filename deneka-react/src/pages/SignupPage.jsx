@@ -1,17 +1,22 @@
-
-import { Card, Form, Input, Select, Button, Checkbox } from 'antd';
 import React, { useState, useEffect } from 'react';
-import videoSrc from '../img_video/pexels-andre-moura-4021521.jpg';  
+import { Alert, Card, Form, Input, Select, Button, Checkbox, Spin, message } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../context/AuthContext';
+import { API } from '../constant';
+import { setToken } from '../helpers';
+import videoSrc from '../img_video/pexels-andre-moura-4021521.jpg';
 import videoSrc2 from '../img_video/pexels-ryutaro-tsukata-6249808.jpg';
 import 'font-awesome/css/font-awesome.min.css';
-
-
 
 const { Option } = Select;
 
 const SignupPage = () => {
+  const { setUser } = useAuthContext();
   const [form] = Form.useForm();
   const [currentImage, setCurrentImage] = useState(videoSrc);
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -23,11 +28,37 @@ const SignupPage = () => {
     };
   }, []);
 
-  const handleSubmit = (values) => {
-    console.log('Form values:', values);
-    // Here you can handle the form submission, like sending the data to your backend
+  const onFinish = async (values) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API}/auth/local/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+      if (data?.error) {
+        throw data?.error;
+      } else {
+        setToken(data.jwt);
+        setUser(data.user);
+        message.success(`Welcome to Social Cards ${data.user.username}!`);
+        navigate('/profile', { replace: true });
+      }
+    } catch (error) {
+      console.error(error);
+      setError(error?.message ?? 'Something went wrong!');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  // The UI remains unchanged from the first code snippet
+
+  
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <Card bodyStyle={{ padding: 0, margin: 0 }} style={{ width: '800px', height: '650px', borderRadius: '8px' }}>
@@ -42,7 +73,7 @@ const SignupPage = () => {
           </div>
             <div style={{ flex: 4, padding: '20px', height: '100%' , display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <h2 style={{ textAlign: 'center' }}>Sign Up</h2>
-                <Form form={form} onFinish={handleSubmit} layout="vertical" >
+                <Form form={form} onFinish={onFinish} layout="vertical" >
                   <Form.Item name="name" rules={[{ required: true, message: 'Please input your name!' }]}>
                     <div style={{ position: 'relative' }}>
                       <i className="fa fa-user" aria-hidden="true" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'lightgrey', zIndex: 1000 }}></i>
