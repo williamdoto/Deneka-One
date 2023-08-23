@@ -15,18 +15,18 @@ async function createUser(ctx) {
     console.log(email);
     
     // Use the connection pool and execute a statement
-    // const userService = require('..//services/UserService');
+    const userService = require('..//services/UserService');
 
-    // await strapi.services.userService.saveUserToSnowflake(
-    //   email,
-    //   password_salt,
-    //   password_hash,
-    //   self_intro,
-    //   create_time,
-    //   isVerified,
-    //   verificationToken,
-    //   resetPasswordToken
-    // );
+    await strapi.services.userService.saveUserToSnowflake(
+      email,
+      password_salt,
+      password_hash,
+      self_intro,
+      create_time,
+      isVerified,
+      verificationToken,
+      resetPasswordToken
+    );
 
     ctx.send({ message: 'User created successfully' });
   } catch (error) {
