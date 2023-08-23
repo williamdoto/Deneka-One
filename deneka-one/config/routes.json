@@ -1,0 +1,29 @@
+{
+    "routes": [
+      {
+        "method": "GET",
+        "path": "/test-snowflake-connection",
+        "handler": "snowflake.testConnection"
+      },
+      {
+        "method": "POST",
+        "path": "/signup/user",
+        "handler": "user.createUser"
+      },
+      {
+        "method": "POST",
+        "path": "/signup/companies",
+        "handler": "company.createCompany"
+      },
+      {
+        "method": "POST",
+        "path": "/signup/domains",
+        "handler": "domain.createDomain"
+      },
+      {
+        "method": "POST",
+        "path": "/signup/employees",
+        "handler": "employees.createEmployee"
+      }
+    ]
+  }
