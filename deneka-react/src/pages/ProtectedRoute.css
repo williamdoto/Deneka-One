@@ -1,0 +1,16 @@
+.navbar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4vw; /* Minimized width */
+  overflow: hidden;
+  background: #f5f5f5;
+  transition: all 0.3s;
+}
+
+.main-content {
+  margin-left: 4vw; /* Minimized margin */
+  width: 96vw; /* Minimized width */
+}
+

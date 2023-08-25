@@ -5,7 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignupPage from './pages/SignupPage';
 import SigninPage from './pages/SigninPage';
 import HomePage from './pages/HomePage';
-import { ProtectedRoute } from './pages/ProtectedRoute';
+import ProtectedRoute from './pages/ProtectedRoute';
+
 import AuthProvider from './pages/AuthProvider/AuthProvider';
 import React from "react";
 import { Col, Layout, Row } from "antd";
@@ -15,19 +16,30 @@ import ForgotpasswordPage from './pages/ForgotPasswordPage';
 const { Header, Content } = Layout;
 
 const AppRoutes = () => {
-    return (
-        <Routes>
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/signin" element={<SigninPage />} />
-          <Route path="/forgotpassword" element={<ForgotpasswordPage />} />
-          <Route path="/" element={
-            <ProtectedRoute>
-              <HomePage />
-            </ProtectedRoute>
-          } />
-          {/* Add more protected routes as needed */}
-        </Routes>
-    );
-  };
-  
-  export default AppRoutes;
+  return (
+    <Routes>
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/signin" element={<SigninPage />} />
+      <Route path="/forgotpassword" element={<ForgotpasswordPage />} />
+      <Route path="/" element={
+        <ProtectedRoute>
+          <HomePage />
+        </ProtectedRoute>
+      } />
+      {/* Add more protected routes as needed */}
+    </Routes>
+  );
+};
+
+export default AppRoutes;
+
+
+            //   <ProtectedRoute>
+            //   <div className="navbar">
+            //     <AppHeader />
+            //   </div>
+            //   <div className="main-content">
+            //   <HomePage />
+            //   </div>
+
+            // </ProtectedRoute>
