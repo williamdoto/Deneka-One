@@ -100,14 +100,11 @@ const SignupPage = () => {
                     </div>
                   </Form.Item>
                   <Form.Item name="location" rules={[{ required: true, message: 'Please select your location!' }]}>
-                    <div style={{ position: 'relative' }}>
-                      <i className="fa fa-location-arrow" aria-hidden="true" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' , color: 'lightgrey', zIndex: 1000}}></i>
-                      <Select style={{ paddingLeft: '30px' }} placeholder="Select Location">
-                        <Option value="Sydney">Sydney</Option>
-                        <Option value="Melbourne">Melbourne</Option>
-                        <Option value="Brisbane">Brisbane</Option>
-                      </Select>
-                    </div>
+                    <Select placeholder="Select Location">
+                      <Option value="Sydney">Sydney</Option>
+                      <Option value="Melbourne">Melbourne</Option>
+                      <Option value="Brisbane">Brisbane</Option>
+                    </Select>
                   </Form.Item>
 
                   <Form.Item name="agreement" valuePropName="checked" rules={[{ required: true, message: 'Please agree to the terms of service and privacy policy!' }]}>
