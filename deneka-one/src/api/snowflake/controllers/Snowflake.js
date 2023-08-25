@@ -18,7 +18,7 @@ async function testSnowflakeConnection() {
           });
           stream.on('end', function () {
             console.log('All rows consumed');
-            clientConnection.release();
+            // clientConnection.release();
           });
         }
       });
