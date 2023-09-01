@@ -56,6 +56,9 @@ const SigninPage = () => {
                     <Button type="primary" htmlType="submit" style={{ width: '100%', backgroundColor: 'purple', borderColor: 'purple' }}>
                       Confirm
                     </Button>
+                    <div className="signin-link" style={{ textAlign: 'right', marginTop: '10px'}}>
+                        <p><a href="/signup" >Don't have an account? Sign up</a></p>
+                    </div>
                     <div style={{ textAlign: 'right' }}> 
                       <span style={{ cursor: 'pointer', color: 'blue' }} onClick={() => { /* your click handler code here */ }}>
                         Forgot Password?
