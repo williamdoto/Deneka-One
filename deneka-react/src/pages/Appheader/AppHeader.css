@@ -1,5 +1,4 @@
-
-.header_space {
+/* .header_wrapper {
   display: flex;
 }
 
@@ -35,20 +34,18 @@
   display: inline;
 }
 
-
-.header_space.expanded .navbar {
-  width: 15vw; /* Expanded width */
-}
-
-.header_space.expanded .navbar_icon {
-  display: block; /* Show when expanded */
+.header_space {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
 }
 
 .header_space_brand {
   font-size: 1.5rem;
   font-weight: bold;
   color: #333;
-  margin-left: 5vw; /* Adjust according to navbar width */
 }
 
 .logo {
@@ -56,7 +53,6 @@
 }
 
 .auth_buttons {
-  margin-left: auto; /* Push the buttons to the right */
   align-items: center;
 }
 
@@ -70,18 +66,4 @@
   background-color: #007bff;
   color: white;
 }
-
-.navbar_item {
-  display: flex;
-  align-items: center;
-}
-
-.navbar_icon {
-  font-size: 24px;
-  margin: 10px;
-}
-
-
-.header_space.expanded .navbar_text {
-  display: inline; /* Show when expanded */
-}
+ */

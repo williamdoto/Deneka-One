@@ -1,61 +1,51 @@
-import React, { useState } from "react";
-import { Button, Space } from "antd";
-import { CgWebsite } from "react-icons/cg"; // Import other icons
-import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai"; // Import plus and close icons
-import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../context/AuthContext";
-import { removeToken } from "../../helpers";
-import './AppHeader.css';
-import logo from './Deneka-One.png';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../../context/AuthContext';
+import { removeToken } from '../../helpers';
+import { Link } from 'react-router-dom';
+import './css/style.css'; // Assuming you've copied all styles including the open/close sidebar styles into this file.
 
 const AppHeader = () => {
+  const [isExpanded, setIsExpanded] = useState(false); // State to handle sidebar
   const { user } = useAuthContext();
   const navigate = useNavigate();
-  const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleToggleSidebar = () => {
+    setIsExpanded(!isExpanded); // Toggle sidebar
+  };
 
   const handleLogout = () => {
     removeToken();
-    navigate("/signin", { replace: true });
+    navigate('/signin', { replace: true });
   };
 
   return (
-    <div className={`header_space ${isExpanded ? 'expanded' : ''}`}>
-      <div className="navbar">
-        {isExpanded ? (
-          <AiOutlineClose className="expand_button" onClick={() => setIsExpanded(!isExpanded)} />
-        ) : (
-          <AiOutlinePlus className="expand_button" onClick={() => setIsExpanded(!isExpanded)} />
-        )}
-        <div className="navbar_item">
-          <CgWebsite className="navbar_icon" />
-          {isExpanded && <span className="navbar_text">Website</span>}
-        </div>
-        {/* Repeat the same pattern for other items */}
-      </div>
-      <Button className="header_space_brand" href="/" type="link">
-        <img src={logo} alt="Deneka-One Logo" className="logo" />
-      </Button>
-      <Space className="auth_buttons">
-        {user ? (
-          <>
-            <Button className="auth_button_login" href="/profile" type="link">
-              {user.username}
-            </Button>
-            <Button className="auth_button_signUp" type="primary" onClick={handleLogout}>
-              Logout
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button className="auth_button_login" href="/signin" type="link">
-              Login
-            </Button>
-            <Button className="auth_button_signUp" href="/signup" type="primary">
-              Sign Up
-            </Button>
-          </>
-        )}
-      </Space>
+    <div className="wrapper d-flex align-items-stretch">
+      <nav id="sidebar" className={isExpanded ? "active" : ""}>
+      <ul class="list-unstyled components mb-5">
+      <button type="button" id="sidebarCollapse" className="btn btn-primary" onClick={handleToggleSidebar}>
+              <i className="fa fa-bars"></i>
+              <span className="sr-only">Toggle Menu</span>
+            </button>
+          <li class="active">
+            <a href="#"><span class="fa fa-home"></span> Home</a>
+          </li>
+          <li>
+              <a href="#"><span class="fa fa-user"></span> About</a>
+          </li>
+          <li>
+            <a href="#"><span class="fa fa-sticky-note"></span> Blog</a>
+          </li>
+          <li>
+            <a href="#"><span class="fa fa-cogs"></span> Services</a>
+          </li>
+          <li>
+            <a href="#"><span class="fa fa-paper-plane"></span> Contacts</a>
+          </li>
+        </ul>
+
+        {/* ...same as before... */}
+      </nav>
     </div>
   );
 };

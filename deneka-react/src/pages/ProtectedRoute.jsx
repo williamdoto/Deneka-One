@@ -11,11 +11,11 @@ const ProtectedRoute = ({ children }) => {
   // }
 
   return  (
-    <div className="protected-layout">
+    <div className="protected-layout d-flex align-items-stretch">
       <div className="navbar">
         <AppHeader />
       </div>
-      <div className="main-content">
+      <div id="content" className="p-4 p-md-5 main-content">
         {children}
       </div>
     </div>
