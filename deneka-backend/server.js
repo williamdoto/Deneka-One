@@ -10,7 +10,12 @@ const signupRoute = require('./routes/signupRoute')
 
 const PORT = process.env.PORT || 3500;
 
-app.use(cors())
+const corsOptions = {
+    origin: 'http://localhost:3000', // Frontend's origin
+    credentials: true, // Allow cookies
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json())
 
