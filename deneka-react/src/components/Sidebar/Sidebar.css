@@ -1,28 +1,35 @@
 .sidebar {
   width: 200px;
   transition: width 0.3s;
-  overflow-x: hidden;  /* Prevents horizontal overflow */
-  overflow-y: auto;    /* Allows vertical scrolling if necessary */
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #F5F5F5; /* Light gray, a bit darker than top bar */
 }
 
 .sidebar-item {
-  color: #fff;  /* This sets the text color to white */
+  color: #333; /* Dark text for contrast on light background */
   display: flex;
   align-items: center;
-  padding: 10px 20px;
-  transition: background-color 0.3s ease;
+  padding: 15px 20px;
+  transition: background-color 0.5s ease;
 }
 
 .icon {
   margin-right: 10px;
+  font-size: 35px; /* Adjust icon size for better visual alignment */
 }
 
 .title {
   flex-grow: 1;
-  white-space: nowrap; /* Prevents text wrapping into the next line */
-
+  white-space: nowrap;
+  font-weight: 500; /* Slightly bolder font for clarity */
 }
 
 .sidebar-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);  /* Slightly lightened on hover */
+  background-color: #E0E0E0; /* Slightly darker shade on hover */
 }
+
+/* You can uncomment this if you want the collapsing functionality */
+/* .sidebar.collapsed {
+  width: 50px;
+} */

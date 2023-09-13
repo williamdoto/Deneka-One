@@ -1,42 +1,44 @@
 import React from 'react';
+import { Col, Row, Container } from 'react-bootstrap';
 import './Sidebar.css';
-import { ChevronRight, ChevronLeft } from 'react-bootstrap-icons';
+
+import { ShopOutlined, HomeOutlined, MoneyCollectOutlined, TeamOutlined } from '@ant-design/icons';
 
 class Sidebar extends React.Component {
-    state = {
-        isCollapsed: false
-    }
-
-    toggleCollapse = () => {
-        console.log('Toggling collapse...'); // Debugging statement
-
-        this.setState(prevState => {
-            console.log('Previous state:', prevState.isCollapsed); // Debugging statement
-            return { isCollapsed: !prevState.isCollapsed };
-        }, () => {
-            console.log('Updated state:', this.state.isCollapsed); // Debugging statement
-        });
-    }
 
     render() {
-        const { isCollapsed } = this.state;
+        const { collapsed } = this.props;
 
         return (
-            <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
-                <div onClick={this.toggleCollapse}>
-                    {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
-                </div>
-                <div className="sidebar-item">
-                    <span className="icon">{"🎵"}</span>
-                    {!isCollapsed && <span className="title">{"Music"}</span>}
-                </div>
-                <div className="sidebar-item">
-                    <span className="icon">{"🎧"}</span>
-                    {!isCollapsed && <span className="title">{"Podcasts"}</span>}
-                </div>
+            <Container fluid className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+                
+                <Row className="sidebar-item">
+                    <Col xs={3}>
+                    <HomeOutlined style={{ fontSize: '22px' }}/>
+                    </Col>
+                    {!collapsed && <Col xs={9} className="title">Dashboard</Col>}
+                </Row>
+                <Row className="sidebar-item">
+                    <Col xs={3}>
+                    <ShopOutlined style={{ fontSize: '22px' }}/>
+                    </Col>
+                    {!collapsed && <Col xs={9} className="title">Marketplace</Col>}
+                </Row>
+                <Row className="sidebar-item">
+                    <Col xs={3}>
+                    <MoneyCollectOutlined style={{ fontSize: '22px' }}/>
+                    </Col>
+                    {!collapsed && <Col xs={9} className="title">Finance</Col>}
+                </Row>
+                <Row className="sidebar-item">
+                    <Col xs={3}>
+                    <TeamOutlined style={{ fontSize: '22px' }}/>
+                    </Col>
+                    {!collapsed && <Col xs={9} className="title">Team</Col>}
+                </Row>
 
-                {/* ... Add more SidebarItems as needed ... */}
-            </div>
+                
+            </Container>
         );
     }
 }

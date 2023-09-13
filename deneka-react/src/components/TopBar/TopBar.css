@@ -1,29 +1,47 @@
-/* TopBar.css */
 .topbar {
-    background-color: #E0E0E0; /* Light gray background for soft UI look */
-    box-shadow: 5px 5px 15px #BEBEBE, -5px -5px 15px #FFFFFF; /* Shadow and light to achieve the neumorphism effect */
-    padding: 15px 30px; /* Some padding for the top bar */
-  }
-  
-  .icon-button {
-    background: transparent;
-    border: none;
+    width: 100%;
+    background-color: #F5F5F5; 
+    padding: 10px 20px; /* Adjusted padding to reduce height */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #E0E0E0; 
+}
+
+.icon-button {
+    background: #FFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 50%; 
     outline: none;
     cursor: pointer;
-  }
-  
-  .icon-button:focus {
+    width: 40px; 
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+.icon-button:focus, .icon-button:hover {
+    background: #E0E0E0;
     box-shadow: none;
-  }
-  
-  .profile-btn {
-    box-shadow: 3px 3px 6px #BEBEBE, -3px -3px 6px #FFFFFF;
-    border-radius: 50%;
-    background-color: #E0E0E0;
-    padding: 10px 15px;
-  }
-  
-  .notification-btn {
-    margin-right: 15px; /* A little space between the notification and profile button */
-  }
-  
+}
+
+.icon-group {
+    display: flex; /* Ensuring buttons are side by side */
+    align-items: center;
+}
+
+.profile-btn {
+    margin-left: 10px;
+}
+
+.notification-btn {
+    margin-right: 10px;
+}
+
+.topbar-logo {
+    max-height: 40px;  /* Adjust this value based on how tall you want the logo to appear */
+    width: auto;
+    margin-right: 10px;  /* adds a bit of space between logo and title */
+}
