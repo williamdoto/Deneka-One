@@ -1,19 +1,11 @@
-import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import SignupPage from './pages/SignupPage';
-import SigninPage from './pages/SigninPage';
-import HomePage from './pages/HomePage';
-import ProtectedRoute from './pages/ProtectedRoute';
-
-import AuthProvider from './pages/AuthProvider/AuthProvider';
-import React from "react";
-import { Col, Layout, Row } from "antd";
-import AppHeader from "./pages/Appheader/Appheader";
-import ForgotpasswordPage from './pages/ForgotPasswordPage';
-// import AppRoutes from "./Routes";
-const { Header, Content } = Layout;
+import { Routes, Route } from "react-router-dom";
+import SignupPage from './views/SignUpPage/SignupPage';
+import SigninPage from './views/SignInPage/SigninPage';
+import HomePage from './views/HomePage';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import ForgotpasswordPage from './components/ForgotPasswordPage';
 
 const AppRoutes = () => {
   return (
@@ -32,14 +24,3 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
-
-
-            //   <ProtectedRoute>
-            //   <div className="navbar">
-            //     <AppHeader />
-            //   </div>
-            //   <div className="main-content">
-            //   <HomePage />
-            //   </div>
-
-            // </ProtectedRoute>
