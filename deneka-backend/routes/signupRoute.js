@@ -6,5 +6,5 @@ const router = express.Router();
 
 // Sign-up route
 // router.post('/signup', signUpController.signUp);
-router.post('/test', signUpController.test)
+router.post('/signup/user', signUpController.userSignUp)
 module.exports = router;

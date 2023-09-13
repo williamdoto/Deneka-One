@@ -9,6 +9,7 @@ import videoSrc2 from '../img_video/pexels-ryutaro-tsukata-6249808.jpg';
 import 'font-awesome/css/font-awesome.min.css';
 import './SignupPage.css';
 import logo from './Appheader/Deneka-One.png';
+import axios from 'axios';
 
 const { Option } = Select;
 
@@ -31,32 +32,49 @@ const SignupPage = () => {
   }, []);
 
   const onFinish = async (values) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${API}/auth/local/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-      });
+    console.log("SENDING USER DATA TO BACKEND")
+    console.log(values);
 
-      const data = await response.json();
-      if (data?.error) {
-        throw data?.error;
-      } else {
-        setToken(data.jwt);
-        setUser(data.user);
-        message.success(`Welcome to Social Cards ${data.user.username}!`);
-        navigate('/profile', { replace: true });
-      }
-    } catch (error) {
-      console.error(error);
-      setError(error?.message ?? 'Something went wrong!');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    axios.post('http://localhost:3500/api/signup/user', values, {
+      withCredentials: true
+    })
+    .then((response) => {
+      // Handle the successful response here
+      console.log('Signup successful:', response.data);
+      navigate('/');
+    })
+    .catch((error) => {
+      // Handle any errors that occur during the request
+      console.error('Signup failed:', error);
+    });
+  }
+  // const onFinish = async (values) => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch(`${API}/auth/local/register`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(values),
+  //     });
+
+  //     const data = await response.json();
+  //     if (data?.error) {
+  //       throw data?.error;
+  //     } else {
+  //       setToken(data.jwt);
+  //       setUser(data.user);
+  //       message.success(`Welcome to Social Cards ${data.user.username}!`);
+  //       navigate('/profile', { replace: true });
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     setError(error?.message ?? 'Something went wrong!');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   // The UI remains unchanged from the first code snippet
 
