@@ -1,46 +1,50 @@
 import React from 'react';
-import { Col, Row, Container } from 'react-bootstrap';
-import './Sidebar.css';
+import { Menu, Switch } from 'antd';
+import {
+    ShopOutlined,
+    HomeOutlined,
+    MoneyCollectOutlined,
+    TeamOutlined
+} from '@ant-design/icons';
 
-import { ShopOutlined, HomeOutlined, MoneyCollectOutlined, TeamOutlined } from '@ant-design/icons';
-
-class Sidebar extends React.Component {
+class SidebarMenu extends React.Component {
+    handleSwitchChange = (checked) => {
+        this.props.togglePosition();
+    };
 
     render() {
-        const { collapsed } = this.props;
+        const { collapsed, isSidebarRight } = this.props;
+        const menuStyle = { width: collapsed ? 80 : 200 };
+        const switchStyle = { marginLeft: '5px', marginBottom: '2px' };
 
         return (
-            <Container fluid className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
-                
-                <Row className="sidebar-item">
-                    <Col xs={3}>
-                    <HomeOutlined style={{ fontSize: '22px' }}/>
-                    </Col>
-                    {!collapsed && <Col xs={9} className="title">Dashboard</Col>}
-                </Row>
-                <Row className="sidebar-item">
-                    <Col xs={3}>
-                    <ShopOutlined style={{ fontSize: '22px' }}/>
-                    </Col>
-                    {!collapsed && <Col xs={9} className="title">Marketplace</Col>}
-                </Row>
-                <Row className="sidebar-item">
-                    <Col xs={3}>
-                    <MoneyCollectOutlined style={{ fontSize: '22px' }}/>
-                    </Col>
-                    {!collapsed && <Col xs={9} className="title">Finance</Col>}
-                </Row>
-                <Row className="sidebar-item">
-                    <Col xs={3}>
-                    <TeamOutlined style={{ fontSize: '22px' }}/>
-                    </Col>
-                    {!collapsed && <Col xs={9} className="title">Team</Col>}
-                </Row>
-
-                
-            </Container>
+            <Menu style={menuStyle} defaultSelectedKeys={['1']} mode="vertical">
+                <Menu.Item key="1" icon={<HomeOutlined />} >
+                    {!collapsed && 'Dashboard'}
+                </Menu.Item>
+                <Menu.Item key="2" icon={<ShopOutlined />} >
+                    {!collapsed && 'Marketplace'}
+                </Menu.Item>
+                <Menu.Item key="3" icon={<MoneyCollectOutlined />} >
+                    {!collapsed && 'Finance'}
+                </Menu.Item>
+                <Menu.Item key="4" icon={<TeamOutlined />} >
+                    {!collapsed && 'Team'}
+                </Menu.Item>
+                <Menu.Item key="togglePosition">
+                    {!collapsed && 'Sidebar Alignment  '}
+                    {!collapsed && (
+                        <Switch 
+                            size="small"
+                            style={switchStyle}
+                            checked={isSidebarRight} 
+                            onChange={this.handleSwitchChange} 
+                        />
+                    )}
+                </Menu.Item>
+            </Menu>
         );
     }
 }
 
-export default Sidebar;
+export default SidebarMenu;

@@ -1,6 +1,6 @@
 .topbar {
     width: 100%;
-    background-color: #F5F5F5; 
+    background-color: #ffff; 
     padding: 10px 20px; /* Adjusted padding to reduce height */
     display: flex;
     align-items: center;
@@ -38,6 +38,9 @@
 
 .notification-btn {
     margin-right: 10px;
+}
+.power-btn {
+    margin-right: 20px;
 }
 
 .topbar-logo {

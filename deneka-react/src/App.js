@@ -1,46 +1,55 @@
 import React, { useState } from "react";
-import { Layout } from "antd";
+import { Layout, Button } from "antd";
 import Sidebar from "./components/Sidebar/Sidebar";
 import AppRoutes from "./AppRoutes";
 import TopBar from "./components/TopBar/TopBar";
 import { useAuthContext } from './context/AuthContext';
 import SigninPage from './views/SignInPage/SigninPage';
+
 const { Header, Content, Sider } = Layout;
 
 function App() {
   const { user } = useAuthContext();
-  
+
   const [collapsed, setCollapsed] = useState(false);
+  const [isSidebarRight, setIsSidebarRight] = useState(false); 
 
   const handleCollapse = (isCollapsed) => {
     setCollapsed(isCollapsed);
   };
 
   const togglerStyle = {
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#ffff",
     color: "#333",
     fontSize: '22px',
     borderRight: "1px solid #E0E0E0",
+    borderLeft: "1px solid #E0E0E0",
   };
 
-  // if (!user) {
-  //   return <SigninPage />;
-  // }
+  const toggleSidebarPosition = () => {
+    setIsSidebarRight(!isSidebarRight);
+    setCollapsed(true); // Ensure the sidebar is collapsed when its position changes
+  };
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider 
-        width={200} 
-        collapsible 
-        onCollapse={handleCollapse}
-        trigger={<div style={togglerStyle}>&#9776;</div>} // Custom styling for the toggler
-        style={{ 
-          background: "#F5F5F5", 
-          borderRight: "1px solid #E0E0E0",
-        }}
-      >
-        <Sidebar collapsed={collapsed} />
-      </Sider>
+      {!isSidebarRight && (
+        <Sider 
+          width={200} 
+          collapsed={collapsed}
+          collapsible 
+          onCollapse={handleCollapse}
+          trigger={<div style={togglerStyle}>&#9776;</div>}
+          style={{ 
+            background: "#ffff", 
+            borderRight: "1px solid #E0E0E0",
+          }}
+        >
+          {/* Pass the toggleSidebarPosition function as a prop */}
+          <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} togglePosition={toggleSidebarPosition} isSidebarRight={isSidebarRight} />
+
+        </Sider>
+      )}
       <Layout>
         <Header style={{ padding: 0, height: 'auto', lineHeight: 'normal' }}>
           <TopBar />
@@ -48,11 +57,24 @@ function App() {
         <Content>
           <AppRoutes />
         </Content>
-        {/* Uncomment this once you want the NotificationBar */}
-        {/* <Footer>
-          <NotificationBar />
-        </Footer> */}
       </Layout>
+      {isSidebarRight && (
+        <Sider 
+          width={200} 
+          collapsed={collapsed}
+          collapsible 
+          onCollapse={handleCollapse}
+          trigger={<div style={togglerStyle}>&#9776;</div>}
+          style={{ 
+            background: "#ffff", 
+            borderRight: "1px solid #E0E0E0",
+          }}
+        >
+          {/* Pass the toggleSidebarPosition function as a prop */}
+          <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} togglePosition={toggleSidebarPosition} isSidebarRight={isSidebarRight} />
+
+        </Sider>
+      )}
     </Layout>
   );
 }

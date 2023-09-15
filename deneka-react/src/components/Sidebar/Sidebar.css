@@ -1,12 +1,11 @@
-.sidebar {
-  width: 200px;
+/* Targeting the Sider component for transition */
+.ant-layout-sider {
   transition: width 0.3s;
-  overflow-x: hidden;
-  overflow-y: auto;
   background-color: #F5F5F5; /* Light gray, a bit darker than top bar */
 }
 
-.sidebar-item {
+/* Styling for the Menu items */
+.ant-menu-item {
   color: #333; /* Dark text for contrast on light background */
   display: flex;
   align-items: center;
@@ -14,22 +13,15 @@
   transition: background-color 0.5s ease;
 }
 
-.icon {
+/* Icon styling - Adjust based on your need */
+.ant-menu-item .anticon {
   margin-right: 10px;
-  font-size: 35px; /* Adjust icon size for better visual alignment */
+  font-size: 55px; /* Adjust icon size for better visual alignment */
 }
 
-.title {
+/* Styling for the Menu item text */
+.ant-menu-item > span {
   flex-grow: 1;
   white-space: nowrap;
   font-weight: 500; /* Slightly bolder font for clarity */
 }
-
-.sidebar-item:hover {
-  background-color: #E0E0E0; /* Slightly darker shade on hover */
-}
-
-/* You can uncomment this if you want the collapsing functionality */
-/* .sidebar.collapsed {
-  width: 50px;
-} */
