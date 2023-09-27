@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ConfigProvider, Layout, Button, theme } from "antd";
-import Sidebar from "./components/Sidebar/Sidebar";
+import { ConfigProvider, Layout, theme } from "antd";
+import SidebarMenu from "./components/Sidebar/Sidebar";
 import AppRoutes from "./AppRoutes";
 import TopBar from "./components/TopBar/TopBar";
 import { useAuthContext } from './context/AuthContext';
@@ -28,8 +28,8 @@ function App() {
     color: isDarkMode ? '#FFFFFF' : '#333',
     fontSize: '22px',
     borderRight: "1px solid #E0E0E0",
-
   };
+
   const toggleSidebarPosition = () => {
     setIsSidebarRight(!isSidebarRight);
     setCollapsed(true); // Ensure the sidebar is collapsed when its position changes
@@ -42,27 +42,44 @@ function App() {
         components: { TopBar: { colorPrimary: '#141414' } }
       }}>
       <Layout style={{ minHeight: "100vh" }}>
-        <Sider
-          width={200}
-          collapsed={collapsed}
-          collapsible
-          onCollapse={handleCollapse}
-          trigger={<div style={togglerStyle}>&#9776;</div>}
-          style={{
-            background: isDarkMode ? '#141414' : '#FFFFFF', // Adjusted to respond to isDarkMode
-            borderRight: "1px solid #E0E0E0",
-          }}
-        >
-          <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} togglePosition={toggleSidebarPosition} isSidebarRight={isSidebarRight} isDarkMode={isDarkMode} />
-        </Sider>
+        {!isSidebarRight && (
+          <Sider
+            width={200}
+            collapsed={collapsed}
+            collapsible
+            onCollapse={handleCollapse}
+            trigger={<div style={togglerStyle}>&#9776;</div>}
+            style={{
+              background: isDarkMode ? '#141414' : '#FFFFFF',
+              borderRight: "1px solid #E0E0E0",
+            }}
+          >
+            <SidebarMenu collapsed={collapsed} setCollapsed={setCollapsed} togglePosition={toggleSidebarPosition} isSidebarRight={isSidebarRight} isDarkMode={isDarkMode} />
+          </Sider>
+        )}
         <Layout>
           <Header style={{ padding: 0, height: 'auto', lineHeight: 'normal' }}>
             <TopBar isDarkMode={isDarkMode} toggleDarkMode={handleToggleDarkMode} />
           </Header>
-          <Content style={{ background: isDarkMode ? '#141414' : '#FFFFFF' }}> {/* Adjusted to respond to isDarkMode */}
+          <Content style={{ background: isDarkMode ? '#141414' : '#FFFFFF' }}>
             <AppRoutes />
           </Content>
         </Layout>
+        {isSidebarRight && (
+          <Sider
+            width={200}
+            collapsed={collapsed}
+            collapsible
+            onCollapse={handleCollapse}
+            trigger={<div style={togglerStyle}>&#9776;</div>}
+            style={{
+              background: isDarkMode ? '#141414' : '#FFFFFF',
+              borderLeft: "1px solid #E0E0E0",
+            }}
+          >
+            <SidebarMenu collapsed={collapsed} setCollapsed={setCollapsed} togglePosition={toggleSidebarPosition} isSidebarRight={isSidebarRight} isDarkMode={isDarkMode} />
+          </Sider>
+        )}
       </Layout>
     </ConfigProvider>
   );
