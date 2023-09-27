@@ -1,8 +1,14 @@
 import React from 'react'
 
+import DashboardBanner from './DashboardBanner';
+
 const HomePage = () => {
   return (
-    <div>WELCOME TO THE HOME PAGE</div>
+    <div>
+
+      <DashboardBanner />
+
+    </div>
   )
 }
 

@@ -10,7 +10,6 @@ const { Header, Content, Sider } = Layout;
 
 function App() {
   const { user } = useAuthContext();
-
   const [collapsed, setCollapsed] = useState(false);
   const [isSidebarRight, setIsSidebarRight] = useState(false); 
 
@@ -31,6 +30,9 @@ function App() {
     setCollapsed(true); // Ensure the sidebar is collapsed when its position changes
   };
 
+  // if (!user) {
+  //   return <SigninPage />;
+  // }
   return (
     <Layout style={{ minHeight: "100vh" }}>
       {!isSidebarRight && (
@@ -54,7 +56,7 @@ function App() {
         <Header style={{ padding: 0, height: 'auto', lineHeight: 'normal' }}>
           <TopBar />
         </Header>
-        <Content>
+        <Content style= {{background: "#ffff"}}>
           <AppRoutes />
         </Content>
       </Layout>

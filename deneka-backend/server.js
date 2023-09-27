@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const path = require('path')
 const signupRoute = require('./routes/signupRoute')
+const signinRoute = require('./routes/signinRoute')
 // const corsOptions = require('./config/corsOptions');
 
 
@@ -30,16 +31,18 @@ app.use('/', express.static(path.join(__dirname, 'public')))
 
 // define Routes
 app.use('/api', signupRoute)
+app.use('/api', signinRoute)
 
 app.all('*', (req, res) => {
-    res.status(404)
-    if (req.accepts('html')) {
-        res.sendFile(path.join(__dirname, 'views', '404.html'))
-    } else if (req.accepts('json')) {
-        res.json({ message: '404 Not Found' })
-    } else {
-        res.type('txt').send('404 Not Found')
-    }
+    res.status(404).send("Error")
+    // if (req.accepts('html')) {
+    //     res.sendFile(path.join(__dirname, 'views', '404.html'))
+    // } else if (req.accepts('json')) {
+    //     res.json({ message: '404 Not Found' })
+    // } else {
+    //     res.type('txt').send('404 Not Found')
+    // }
+
 })
 
 

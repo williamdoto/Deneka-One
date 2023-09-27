@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './TopBar.css';
 import { UserOutlined, BellOutlined, BulbOutlined } from '@ant-design/icons';
-import { Dropdown, Space } from 'antd';
+import { Dropdown, Space, theme, Button } from 'antd';
 import logo from '../../assets/media/Deneka-One.png'; // Importing the logo
 
 const items = [
   {
     label: (
       <a target="_blank" rel="noopener noreferrer" href="https://www.google.com">
-        1st menu item
+       My Profile
       </a>
     ),
     key: '0',
@@ -16,7 +16,7 @@ const items = [
   {
     label: (
       <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-        2nd menu item
+        Settings
       </a>
     ),
     key: '1',
@@ -25,23 +25,27 @@ const items = [
     type: 'divider',
   },
   {
-    label: '3rd menu item（disabled）',
+    label: 'Log Out',
     key: '3',
     disabled: true,
   },
 ];
 
 const TopBar = () => {
+    const { defaultAlgorithm, darkAlgorithm } = theme;
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const toggleTheme = () => {
+        setIsDarkMode(prevMode => !prevMode);
+    };
   return (
     <div className="topbar">
       <img src={logo} alt="Deneka One Logo" className="topbar-logo" />
       <h4>Deneka One</h4>
       <div className="icon-group">
-      <Dropdown menu={{ items }}>
+
           <button className="icon-button power-btn">
           <BulbOutlined />
           </button>
-        </Dropdown>
         <Dropdown menu={{ items }}>
           <button className="icon-button notification-btn">
             <BellOutlined />

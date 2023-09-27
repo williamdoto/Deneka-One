@@ -7,6 +7,7 @@ import HomePage from './views/HomePage';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import ForgotpasswordPage from './components/ForgotPasswordPage';
 
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -18,6 +19,7 @@ const AppRoutes = () => {
           <HomePage />
         </ProtectedRoute>
       } />
+      
       {/* Add more protected routes as needed */}
     </Routes>
   );
