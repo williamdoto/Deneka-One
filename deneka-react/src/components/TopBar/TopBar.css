@@ -1,6 +1,6 @@
 .topbar {
     width: 100%;
-    background-color: #ffff; 
+    background-color: #ffff;
     padding: 10px 20px; /* Adjusted padding to reduce height */
     display: flex;
     align-items: center;
@@ -9,7 +9,7 @@
 }
 
 .icon-button {
-    background: #FFF;
+    background-color: #ffffff;  /* Corrected color value */
     border: 1px solid #E0E0E0;
     border-radius: 50%; 
     outline: none;
@@ -47,4 +47,20 @@
     max-height: 40px;  /* Adjust this value based on how tall you want the logo to appear */
     width: auto;
     margin-right: 10px;  /* adds a bit of space between logo and title */
+}
+
+.dark-mode {
+    background-color: #141414; /* Dark background color */
+    color: white; /* White text color */
+}
+
+.icon-button-dark {
+    background: #141414; /* Dark background for buttons */
+    border: 1px solid #666666; /* Darker border for buttons */
+    color: white; /* White icon color */
+}
+
+.icon-button-dark:focus, .icon-button-dark:hover {
+    background: #666666; /* Even darker background for button focus/hover */
+    box-shadow: none;
 }
