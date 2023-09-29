@@ -24,7 +24,7 @@ function App() {
   };
 
   const togglerStyle = {
-    backgroundColor: isDarkMode ? '#141414' : '#FFFFFF',
+    backgroundColor: isDarkMode ? '#29323c' : '#FFFFFF',
     color: isDarkMode ? '#FFFFFF' : '#333',
     fontSize: '22px',
     borderRight: "1px solid #E0E0E0",
@@ -32,16 +32,17 @@ function App() {
 
   const toggleSidebarPosition = () => {
     setIsSidebarRight(!isSidebarRight);
-    setCollapsed(true); // Ensure the sidebar is collapsed when its position changes
+    setCollapsed(true);
   };
 
   return (
     <ConfigProvider
       theme={{
         algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
-        components: { TopBar: { colorPrimary: '#141414' } }
-      }}>
-      <Layout style={{ minHeight: "100vh" }}>
+        components: { TopBar: { colorPrimary: isDarkMode ? '#29323c' : '#FFFFFF' } }
+      }}
+    >
+      <Layout style={{ minHeight: "100vh", background: isDarkMode ? '#141414' : '#FFFFFF' }}>
         {!isSidebarRight && (
           <Sider
             width={200}
@@ -50,15 +51,16 @@ function App() {
             onCollapse={handleCollapse}
             trigger={<div style={togglerStyle}>&#9776;</div>}
             style={{
-              background: isDarkMode ? '#141414' : '#FFFFFF',
+              background: isDarkMode ? 'linear-gradient(60deg, #29323c 0%, #485563 100%)' : 'linear-gradient(60deg, #ffffff 0%, #f0f0f0 100%)',
               borderRight: "1px solid #E0E0E0",
+              color: isDarkMode ? 'white' :'black'
             }}
           >
             <SidebarMenu collapsed={collapsed} setCollapsed={setCollapsed} togglePosition={toggleSidebarPosition} isSidebarRight={isSidebarRight} isDarkMode={isDarkMode} />
           </Sider>
         )}
         <Layout>
-          <Header style={{ padding: 0, height: 'auto', lineHeight: 'normal' }}>
+          <Header style={{ padding: 0, height: 'auto', lineHeight: 'normal', background: isDarkMode ? 'linear-gradient(60deg, #29323c 0%, #485563 100%)' : '#FFFFFF' }}>
             <TopBar isDarkMode={isDarkMode} toggleDarkMode={handleToggleDarkMode} />
           </Header>
           <Content style={{ background: isDarkMode ? '#141414' : '#FFFFFF' }}>
@@ -73,7 +75,7 @@ function App() {
             onCollapse={handleCollapse}
             trigger={<div style={togglerStyle}>&#9776;</div>}
             style={{
-              background: isDarkMode ? '#141414' : '#FFFFFF',
+              background: isDarkMode ? 'linear-gradient(60deg, #29323c 0%, #485563 100%)' : '#FFFFFF',
               borderLeft: "1px solid #E0E0E0",
             }}
           >

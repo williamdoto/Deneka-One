@@ -1,11 +1,11 @@
 .topbar {
     width: 100%;
-    background-color: #ffff;
-    padding: 10px 20px; /* Adjusted padding to reduce height */
+    padding: 10px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #E0E0E0; 
+    transition: background-color 0.3s ease;
 }
 
 .icon-button {
@@ -49,18 +49,23 @@
     margin-right: 10px;  /* adds a bit of space between logo and title */
 }
 
+.light-mode {
+    background-color: linear-gradient(60deg, #ffffff 0%, #f0f0f0 100%);
+    color:black;
+}
+
 .dark-mode {
-    background-color: #000; /* Dark background color */
+    background: linear-gradient(60deg, #29323c 0%, #485563 100%);
     color: white; /* White text color */
 }
 
 .icon-button-dark {
-    background: #141414; /* Dark background for buttons */
-    border: 1px solid #666666; /* Darker border for buttons */
-    color: white; /* White icon color */
+    background: #29323c; /* Adjusted color to match gradient */
+    border: 1px solid #485563; /* Adjusted border color */
+    color: white;
 }
 
 .icon-button-dark:focus, .icon-button-dark:hover {
-    background: #666666; /* Even darker background for button focus/hover */
+    background: #485563; /* Adjusted hover color */
     box-shadow: none;
 }

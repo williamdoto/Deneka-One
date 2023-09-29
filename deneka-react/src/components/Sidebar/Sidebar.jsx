@@ -4,7 +4,10 @@ import {
     ShopOutlined,
     HomeOutlined,
     MoneyCollectOutlined,
-    TeamOutlined
+    TeamOutlined,
+    PieChartOutlined,
+    DesktopOutlined,
+    ContainerOutlined
 } from '@ant-design/icons';
 
 const { SubMenu } = Menu;
@@ -16,32 +19,34 @@ class SidebarMenu extends React.Component {
 
     render() {
         const { collapsed, isSidebarRight, isDarkMode } = this.props;
-        const menuStyle = { 
+        const menuStyle = {
             width: collapsed ? 80 : 200,
-            backgroundColor: isDarkMode ? '#141414' : '#FFFFFF', // Conditional styling,
+            background: isDarkMode ? 'linear-gradient(60deg, #29323c 0%, #485563 100%)' : 'linear-gradient(60deg, #ffffff 0%, #f0f0f0 100%)',
             borderRight: "1px solid #E0E0E0",
+
+            overflow: 'hidden'
         };
         const switchStyle = { marginLeft: '5px', marginBottom: '2px' };
-        const iconColor = isDarkMode ? '#FFF' : '#333'; // Icon color based on theme
+        const iconColor = isDarkMode ? '#FFF' : '#333'; 
 
         return (
-            <Menu style={menuStyle} defaultSelectedKeys={['1']} mode="vertical" >
+            <Menu style={menuStyle} defaultSelectedKeys={['1']} mode="inline" theme={isDarkMode ? 'dark' : 'light'}>
                 <SubMenu key="sub1" icon={<HomeOutlined style={{ color: iconColor }} />} title={!collapsed && 'Dashboard'}>
-                    <Menu.Item key="5">Option 1</Menu.Item>
-                    <Menu.Item key="6">Option 2</Menu.Item>
+                    <Menu.Item key="5" icon={<PieChartOutlined style={{ color: iconColor }} />}>Option 1</Menu.Item>
+                    <Menu.Item key="6" icon={<DesktopOutlined style={{ color: iconColor }} />}>Option 2</Menu.Item>
                 </SubMenu>
                 <Menu.Item key="2" icon={<ShopOutlined style={{ color: iconColor }} />}>
                     {!collapsed && 'Marketplace'}
                 </Menu.Item>
-                
-                <Menu.Item key="3" icon={<MoneyCollectOutlined style={{ color: iconColor }} />}>
-                    {!collapsed && 'Finance'}
-                </Menu.Item>
+                <SubMenu key="sub3" icon={<MoneyCollectOutlined style={{ color: iconColor }} />} title={!collapsed && 'Finance'}>
+                    <Menu.Item key="7">Option 3</Menu.Item>
+                    <Menu.Item key="8">Option 4</Menu.Item>
+                </SubMenu>
                 <Menu.Item key="4" icon={<TeamOutlined style={{ color: iconColor }} />}>
                     {!collapsed && 'Team'}
                 </Menu.Item>
                 <Menu.Item key="togglePosition">
-                    {!collapsed && 'Sidebar Alignment  '}
+                    {!collapsed && 'Sidebar Alignment'}
                     {!collapsed && (
                         <Switch
                             size="small"

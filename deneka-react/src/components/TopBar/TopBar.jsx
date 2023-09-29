@@ -32,31 +32,27 @@ const items = [
 ];
 
 const TopBar = ({ isDarkMode, toggleDarkMode }) => {
-    const { defaultAlgorithm, darkAlgorithm } = theme;
-
   return (
-    <div className={`topbar ${isDarkMode ? 'dark-mode' : ''}`}>
+    <div className={`topbar ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
       <img src={logo} alt="Deneka One Logo" className="topbar-logo" />
       <h4>Deneka One</h4>
       <div className="icon-group">
-
-      <button 
+        <button 
             className={`icon-button power-btn ${isDarkMode ? 'icon-button-dark' : ''}`} 
             onClick={toggleDarkMode}
-          >
-            <BulbOutlined style={{ color: isDarkMode ? 'yellow' : 'gray' }} />
-          </button>
+        >
+          <BulbOutlined style={{ color: isDarkMode ? 'yellow' : 'gray' }} />
+        </button>
         <Dropdown menu={{ items }}>
           <button className={`icon-button power-btn ${isDarkMode ? 'icon-button-dark' : ''}`}>
             <BellOutlined />
           </button>
         </Dropdown>
         <Dropdown menu={{ items }}>
-        <button className={`icon-button profile-btn ${isDarkMode ? 'icon-button-dark' : ''}`}>
+          <button className={`icon-button profile-btn ${isDarkMode ? 'icon-button-dark' : ''}`}>
             <UserOutlined />
           </button>
         </Dropdown>
-
       </div>
     </div>
   );
