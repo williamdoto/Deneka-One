@@ -45,17 +45,17 @@ class SidebarMenu extends React.Component {
                 <Menu.Item key="4" icon={<TeamOutlined style={{ color: iconColor }} />}>
                     {!collapsed && 'Team'}
                 </Menu.Item>
+                {!collapsed && (
                 <Menu.Item key="togglePosition">
-                    {!collapsed && 'Sidebar Alignment'}
-                    {!collapsed && (
-                        <Switch
-                            size="small"
-                            style={switchStyle}
-                            checked={isSidebarRight}
-                            onChange={this.handleSwitchChange}
-                        />
-                    )}
+                    {'Sidebar Alignment'}
+                    <Switch
+                        size="small"
+                        style={switchStyle}
+                        checked={isSidebarRight}
+                        onChange={this.handleSwitchChange}
+                    />
                 </Menu.Item>
+            )}
             </Menu>
         );
     }

@@ -6,6 +6,7 @@ import SigninPage from './views/SignInPage/SigninPage';
 import HomePage from './views/HomePage';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import ForgotpasswordPage from './components/ForgotPasswordPage';
+import NotFoundPage from './views/Error/NotFoundPage';
 
 
 const AppRoutes = () => {
@@ -19,6 +20,7 @@ const AppRoutes = () => {
           <HomePage />
         </ProtectedRoute>
       } />
+      <Route path="*" element={<NotFoundPage />} />
       
       {/* Add more protected routes as needed */}
     </Routes>

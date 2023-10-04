@@ -31,7 +31,7 @@ const items = [
   },
 ];
 
-const TopBar = ({ isDarkMode, toggleDarkMode }) => {
+const  TopBar = ({ isDarkMode, toggleDarkMode, toggleNotificationBar }) => {
   return (
     <div className={`topbar ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
       <img src={logo} alt="Deneka One Logo" className="topbar-logo" />
@@ -44,7 +44,10 @@ const TopBar = ({ isDarkMode, toggleDarkMode }) => {
           <BulbOutlined style={{ color: isDarkMode ? 'yellow' : 'gray' }} />
         </button>
         <Dropdown menu={{ items }}>
-          <button className={`icon-button power-btn ${isDarkMode ? 'icon-button-dark' : ''}`}>
+        <button 
+            className={`icon-button power-btn ${isDarkMode ? 'icon-button-dark' : ''}`}
+            onClick={toggleNotificationBar}  // Attach the toggleNotificationBar function to onClick
+        >
             <BellOutlined />
           </button>
         </Dropdown>
