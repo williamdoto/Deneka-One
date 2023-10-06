@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './TopBar.css';
-import { UserOutlined, BellOutlined, BulbOutlined } from '@ant-design/icons';
-import { Dropdown, Space, theme, Button } from 'antd';
+import { UserOutlined, BellOutlined, BulbOutlined, SearchOutlined  } from '@ant-design/icons';
+import { Dropdown, Space, theme, Button, Input } from 'antd';
 import logo from '../../assets/media/Deneka-One.png'; // Importing the logo
 
 const items = [
@@ -32,10 +32,32 @@ const items = [
 ];
 
 const  TopBar = ({ isDarkMode, toggleDarkMode, toggleNotificationBar }) => {
+  const [searchInput, setSearchInput] = useState('');
+
+  const handleSearchInputChange = (e) => {
+    setSearchInput(e.target.value);
+  };
+
+  // Handle search
+  const handleSearch = () => {
+    console.log('Search:', searchInput);
+    // Implement search functionality here
+  };
+
   return (
     <div className={`topbar ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
       <img src={logo} alt="Deneka One Logo" className="topbar-logo" />
-      <h4>Deneka One</h4>
+      <h5>Deneka One</h5>
+      <div className="search-bar"> {/* Add search bar container */}
+        <Input 
+          placeholder="Search..." 
+          value={searchInput}
+          onChange={handleSearchInputChange}
+          onPressEnter={handleSearch} // Trigger search on Enter
+          suffix={<SearchOutlined onClick={handleSearch} />} // Search icon
+          style={{ width: '30vw' }} // Adjust width as needed
+        />
+      </div>
       <div className="icon-group">
         <button 
             className={`icon-button power-btn ${isDarkMode ? 'icon-button-dark' : ''}`} 

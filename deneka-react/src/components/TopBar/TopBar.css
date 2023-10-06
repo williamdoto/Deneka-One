@@ -6,6 +6,7 @@
     justify-content: space-between;
     border-bottom: 1px solid #E0E0E0; 
     transition: background-color 0.3s ease;
+    justify-content: flex-start; /* Change this from space-between */
 }
 
 .icon-button {
@@ -69,3 +70,18 @@
     background: #485563; /* Adjusted hover color */
     box-shadow: none;
 }
+
+.logo-title {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo-title h4 {
+    margin-left: 10px; /* Adjust as needed */
+  }
+  
+  .search-bar {
+    flex-grow: 1; /* This allows the search bar to take up the available space */
+    display: flex;
+    justify-content: center;
+  }
