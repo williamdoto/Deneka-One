@@ -1,15 +1,16 @@
 .topbar {
     width: 100%;
-    background-color: #ffff; 
-    padding: 10px 20px; /* Adjusted padding to reduce height */
+    padding: 10px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #E0E0E0; 
+    transition: background-color 0.3s ease;
+    justify-content: flex-start; /* Change this from space-between */
 }
 
 .icon-button {
-    background: #FFF;
+    background-color: #ffffff;  /* Corrected color value */
     border: 1px solid #E0E0E0;
     border-radius: 50%; 
     outline: none;
@@ -33,7 +34,7 @@
 }
 
 .profile-btn {
-    margin-left: 10px;
+    margin-left: 0px;
 }
 
 .notification-btn {
@@ -48,3 +49,39 @@
     width: auto;
     margin-right: 10px;  /* adds a bit of space between logo and title */
 }
+
+.light-mode {
+    background-color: linear-gradient(60deg, #ffffff 0%, #f0f0f0 100%);
+    color:black;
+}
+
+.dark-mode {
+    background: linear-gradient(60deg, #29323c 0%, #485563 100%);
+    color: white; /* White text color */
+}
+
+.icon-button-dark {
+    background: #29323c; /* Adjusted color to match gradient */
+    border: 1px solid #485563; /* Adjusted border color */
+    color: white;
+}
+
+.icon-button-dark:focus, .icon-button-dark:hover {
+    background: #485563; /* Adjusted hover color */
+    box-shadow: none;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo-title h4 {
+    margin-left: 10px; /* Adjust as needed */
+  }
+  
+  .search-bar {
+    flex-grow: 1; /* This allows the search bar to take up the available space */
+    display: flex;
+    justify-content: center;
+  }
