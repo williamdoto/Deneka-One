@@ -21,6 +21,9 @@ function App() {
   const [notificationVisible, setNotificationVisible] = useState(false);
   const location = useLocation();
 
+  const [drawerWidth, setDrawerWidth] = useState(0); // Define drawerWidth and setDrawerWidth
+
+  const [drawerPinned, setDrawerPinned] = useState(false); // New state to track whether the drawer is pinned
   const isAuthenticated = () => {
     // Replace with your actual authentication check
     return true;
@@ -46,6 +49,16 @@ function App() {
     fontSize: '22px',
     borderRight: "1px solid #E0E0E0",
   };
+
+  const computeContentStyle = () => {
+    return {
+      background: isDarkMode ? '#141414' : '#FFFFFF',
+      position: 'relative',
+      marginRight: drawerPinned && !isSidebarRight ? `378px` : '0px',
+      marginLeft: drawerPinned && isSidebarRight ? `378px` : '0px',
+    };
+  };
+  
 
   const toggleSidebarPosition = () => {
     setIsSidebarRight(!isSidebarRight);
@@ -81,9 +94,10 @@ function App() {
             <Header style={{ padding: 0, height: 'auto', lineHeight: 'normal', background: isDarkMode ? 'linear-gradient(60deg, #29323c 0%, #485563 100%)' : '#FFFFFF' }}>
               <TopBar isDarkMode={isDarkMode} toggleDarkMode={handleToggleDarkMode} toggleNotificationBar={toggleNotificationBar} />
             </Header>)}
-          <Content style={{ background: isDarkMode ? '#141414' : '#FFFFFF', position: 'relative' }}>
+          <Content style={computeContentStyle()}>
             <AppRoutes />
-            {!shouldHideBars && <FloatButton shape="circle" tooltip={<div>Chat</div>} icon={<MessageTwoTone />} style={{ bottom:'24px', boxShadow: isDarkMode ? '0px 2px 10px 0px #ffff' : '0px 2px 10px 0px #000000' }}/>} {/* Add logo prop here */}
+            {!shouldHideBars && <FloatButton shape="circle" tooltip={<div>Chat</div>} icon={<MessageTwoTone />} style={{ bottom:'24px',right: isSidebarRight ? 'initial' : '24px', 
+    left: isSidebarRight ? '24px' : 'initial', boxShadow: isDarkMode ? '0px 2px 10px 0px #ffff' : '0px 2px 10px 0px #000000' }}/>} {/* Add logo prop here */}
           </Content>
         </Layout>
         {!shouldHideBars && isSidebarRight && (
@@ -106,6 +120,8 @@ function App() {
             visible={notificationVisible}
             onClose={toggleNotificationBar}
             placement={!isSidebarRight ? "right" : "left"}
+            setDrawerWidth={setDrawerWidth} // Pass the setter function
+      onPin={setDrawerPinned} // Pass the setter function for drawerPinned
           />)}
       </Layout>
     </ConfigProvider>

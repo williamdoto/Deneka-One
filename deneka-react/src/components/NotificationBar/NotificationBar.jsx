@@ -1,12 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Drawer, Button } from 'antd';
 import {
   PushpinOutlined,
   PushpinFilled,
 } from '@ant-design/icons';
 
-const NotificationBar = ({ visible, onClose, placement }) => {
+const NotificationBar = ({ visible, onClose, placement, onPin, setDrawerWidth }) => {
   const [mask, setMask] = useState(true); // set initial state for mask
+  const [pinned, setPinned] = useState(false); // New state to track whether the drawer is pinned
+
+  const drawerRef = useRef(null);
+
+  useEffect(() => {
+    if (drawerRef.current) {
+      const width = drawerRef.current.clientWidth || drawerRef.current.offsetWidth;
+      setDrawerWidth(width);
+    }
+  }, [visible, setDrawerWidth]);
+
+  const handlePin = () => {
+    setPinned(!pinned);
+    setMask(pinned); // Update the mask when pinned state changes
+    onPin(!pinned);
+  };
+
 
   return (
     <Drawer
@@ -15,8 +32,8 @@ const NotificationBar = ({ visible, onClose, placement }) => {
           <span>Notifications</span>
           <Button
             type="text"
-            icon={mask ? <PushpinOutlined /> : <PushpinFilled />}
-            onClick={() => setMask(!mask)} // toggle mask state on icon click
+            icon={pinned ? <PushpinFilled /> : <PushpinOutlined />}
+            onClick={handlePin} // toggle pinned state on icon click
           />
         </div>
       }
@@ -24,7 +41,10 @@ const NotificationBar = ({ visible, onClose, placement }) => {
       onClose={onClose}
       closable={true}
       visible={visible}
-      mask={mask} // set mask prop from state
+      mask={!pinned} // Set mask based on pinned state
+      getContainer={false} // This prop allows the drawer to be a sibling to the content
+      style={{ position: 'absolute' }} // Set position to absolute
+      ref={drawerRef}
     >
       {/* Your notification content here */}
       <p>Some contents...</p>
