@@ -41,7 +41,7 @@ const DashboardBanner = () => {
                   <span className={styles.y}>Y</span>
                   <span className={styles.ou}>ou</span>
                   <span className={styles.r}>{`r `}</span>
-                  <span>Marketplace</span>
+                  <span>Personalised Dashboard</span>
                 </span>
               </span>
             </p>
