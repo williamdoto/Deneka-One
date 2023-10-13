@@ -108,7 +108,7 @@ const NotificationBar = ({ visible, onClose, placement, onPin, setDrawerWidth })
   return (
     <Drawer
       title={
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
           <span>Notifications</span>
           <Button
             type="text"
@@ -123,8 +123,9 @@ const NotificationBar = ({ visible, onClose, placement, onPin, setDrawerWidth })
       visible={visible}
       mask={!pinned} // Set mask based on pinned state
       getContainer={false} // This prop allows the drawer to be a sibling to the content
-      style={{ position: 'absolute' }} // Set position to absolute
+      style={{ position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.88)' }} // Set position to absolute
       ref={drawerRef}
+      
     >
       {/* Your notification content here */}
       <Card

@@ -9,7 +9,7 @@ const signinRoute = require('./routes/signinRoute')
 // const corsOptions = require('./config/corsOptions');
 
 
-const PORT = process.env.PORT || 3500;
+const PORT = process.env.PORT || 1337;
 
 const corsOptions = {
     origin: 'http://localhost:3000', // Frontend's origin

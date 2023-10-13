@@ -54,8 +54,8 @@ function App() {
     return {
       background: isDarkMode ? '#141414' : '#FFFFFF',
       position: 'relative',
-      marginRight: drawerPinned && !isSidebarRight ? `378px` : '0px',
-      marginLeft: drawerPinned && isSidebarRight ? `378px` : '0px',
+      marginRight: notificationVisible && drawerPinned && !isSidebarRight ? `378px` : '0px',
+      marginLeft: notificationVisible && drawerPinned && isSidebarRight ? `378px` : '0px',
     };
   };
   
