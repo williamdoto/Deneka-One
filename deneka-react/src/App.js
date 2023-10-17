@@ -6,9 +6,9 @@ import TopBar from "./components/TopBar/TopBar";
 import { useAuthContext } from './context/AuthContext';
 import NotificationBar from "./components/NotificationBar/NotificationBar";
 import SigninPage from './views/SignInPage/SigninPage';
+import FeedbackButton from "./components/FloatButton/FeedbackButton";
 import { useLocation } from 'react-router-dom';
 
-import { MessageTwoTone } from '@ant-design/icons';
 
 const { Header, Content, Sider } = Layout;
 const { defaultAlgorithm, darkAlgorithm } = theme;
@@ -96,8 +96,11 @@ function App() {
             </Header>)}
           <Content style={computeContentStyle()}>
             <AppRoutes />
-            {!shouldHideBars && <FloatButton shape="circle" tooltip={<div>Chat</div>} icon={<MessageTwoTone />} style={{ bottom:'24px',right: isSidebarRight ? 'initial' : '24px', 
-    left: isSidebarRight ? '24px' : 'initial', boxShadow: isDarkMode ? '0px 2px 10px 0px #ffff' : '0px 2px 10px 0px #000000' }}/>} {/* Add logo prop here */}
+            <FeedbackButton 
+    shouldHideBars={shouldHideBars} 
+    isDarkMode={isDarkMode} 
+    isSidebarRight={isSidebarRight} 
+  />
           </Content>
         </Layout>
         {!shouldHideBars && isSidebarRight && (
