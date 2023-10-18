@@ -276,3 +276,10 @@
   color: var(--color-gray-100);
   font-family: var(--font-manrope);
 }
+
+@media only screen and (max-width: 830px) {
+  .frameParent {
+    flex-direction: column-reverse;
+
+  }
+}

@@ -29,6 +29,19 @@
     font-size: 16px;
 }
 
+.fs-18 { 
+    font-size: 18px;
+}
+
+.fs-20 { 
+    font-size: 20px;
+}
+
+.semi-bold {
+    font-weight: 600;
+}
+
+
 .bnb2 {
     color: #52c41a;
     font-weight: 700;
@@ -55,6 +68,7 @@ small.redtext {
 
     width: 70%;
     margin: 0 auto;
+    padding: 10px;
     /* margin: -53px 0 24px; */
 }
 .col-info {
@@ -68,16 +82,16 @@ small.redtext {
 .avatar-info {
     width: 100%;
     /* background: rgb(60, 0, 255); */
-    margin: 10px 0;
+    margin: 5px 0;
     /* background-color: brown; */
     /* margin-left: 16px; */
 }
 
 .avatar-info h6 {
     font-weight: bold;
-    font-size: 14px;
     line-height: 14px;
-    margin-bottom: 3px;
+    margin-bottom: 7px;
+
 }
 
 .avatar-info p {
@@ -86,3 +100,52 @@ small.redtext {
     color: #8c8c8c;
     margin: 0px;
 }
+
+/* Card Css */
+
+
+.card-credit {
+    background-image: url("../../public/info-card-2.jpg");
+    background-position: 50%;
+    background-size: cover;
+    border: none;
+  }
+  .card-credit * {
+    color: #fff;
+  }
+  
+  .card-credit .card-number {
+    word-spacing: 10px;
+    font-weight: 600;
+    margin-bottom: 45px;
+    font-size: 20px;
+  }
+  .ant-card-head-wrapper {
+    min-height: 72px;
+  }
+  .card-credit .ant-card-body {
+    padding-top: 15px;
+  }
+  .card-credit .card-footer {
+    display: flex;
+    align-items: flex-end;
+  }
+  .m-auto,
+  .ml-auto {
+    margin-left: auto !important;
+  }
+  .m-30,
+  .mr-30,
+  .mx-30 {
+    margin-right: 30px !important;
+  }
+  .card-credit .card-footer h6,
+  .card-credit .card-footer p {
+    margin-bottom: 0;
+  }
+  .card-credit .col-logo img {
+    max-width: 50px;
+  }
+  .card-credit .card-footer h6 {
+    font-weight: 700;
+  }

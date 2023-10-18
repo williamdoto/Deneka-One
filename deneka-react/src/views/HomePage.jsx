@@ -3,8 +3,11 @@ import "./HomePage.css"
 
 import DashboardBanner from './DashboardBanner';
 import LineChart from "../components/chart/LineChart";
+import PricingCard from "../components/Card/PricingCard";
+import Carousel from "../components/Carousel/Carousel";
 
 import { DollarOutlined, ShoppingOutlined, TeamOutlined, RiseOutlined} from '@ant-design/icons';
+import { PlusOutlined, ExclamationOutlined } from "@ant-design/icons";
 
 import {
   Card,
@@ -12,7 +15,8 @@ import {
   Row,
   Typography,
   Avatar,
-  Radio
+  Radio,
+  Statistic
 } from "antd";
 
 const HomePage = () => {
@@ -51,6 +55,8 @@ const HomePage = () => {
     },
   ];
 
+
+
   return (
     <div>
       <DashboardBanner />
@@ -65,9 +71,8 @@ const HomePage = () => {
 
                 <div className="avatar-info">
                   <Avatar size={40} shape="square" src={"logo192.png"} />
-                  <h6 className="font-semibold m-0">Please confirm your email address!</h6>
-                  <p>If you didn't receive an email from us yet, you can resend email. We will contact you on the following address: sinef49551@ksyhtc.com
-                      Wrong email address? You can change your email here.</p>
+                  <h6 className="fs-16 semi-bold">Please Complete Your Profile!</h6>
+                  <p>If you didn't complete, you'll miss out our key features.</p>
                 </div>
               </Avatar.Group>
             </Col>
@@ -131,10 +136,63 @@ const HomePage = () => {
 
             <Card bordered={true} className="criclebox">
               {/* <Echart /> */}
-              <p> Some </p>
+              <Card
+                // title={wifi}
+                bordered={false}
+                className="card-credit header-solid h-ful"
+              >
+                <h5 className="card-number">Some Statistics</h5>
+
+                <div className="card-footer">
+                  <div className="mr-30">
+                    <p>Card Holder</p>
+                    <h6>Jack Peterson</h6>
+                  </div>
+                  <div className="mr-30">
+                    <p>Expires</p>
+                    <h6>11/22</h6>
+                  </div>
+                  <div className="card-footer-col col-logo ml-auto">
+                    <img src={"logo512.png"} alt="mastercard" />
+                  </div>
+                </div>
+              </Card>
+
+              <Card bordered={false} className="widget-2 h-full">
+                <Statistic
+                  title={
+                    <>
+                      {/* <div className="icon">{angle}</div> */}
+                      <h6>Revenue</h6>
+                      <p>Belong Interactive</p>
+                    </>
+                  }
+                  value={"$2,000"}
+                  prefix={<PlusOutlined />}
+                />
+              </Card>
+
+
+              <Card bordered={false} className="widget-2 h-full">
+                <Statistic
+                  title={
+                    <>
+                      <div className="icon">
+                        {/* <img src={paypal} alt="paypal" /> */}
+                      </div>
+                      <h6>Expense</h6>
+                      <p>Freelance Payments</p>
+                    </>
+                  }
+                  value={"$49,000"}
+                  prefix={<PlusOutlined />}
+                />
+              </Card>
             </Card>
           </Col>
         </Row>
+
+        {/* <Carousel /> */}
 
     </div>
   )

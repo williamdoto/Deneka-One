@@ -108,7 +108,7 @@ const NotificationBar = ({ visible, onClose, placement, onPin, setDrawerWidth })
   return (
     <Drawer
       title={
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'fixed', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
           <span>Notifications</span>
           <Button
             type="text"
