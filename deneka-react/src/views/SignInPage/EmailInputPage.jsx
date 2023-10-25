@@ -17,20 +17,16 @@ const EmailInputPage = ({ navigateTo }) => {
         message.error('Error:', response.data.message);
       }
     } catch (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.error('Error:', error.response.data);
-        message.error('Error sending OTP:', error.response.data.message);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error('Error:', error.request);
-        message.error('Error sending OTP: No response from the server.');
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error('Error:', error.message);
-        message.error('Error sending OTP:', error.message);
-      }
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error('Error:', error.response.data);
+            if (error.response.data.message === 'Email not registered') {
+              message.error('Email incorrect. Please enter the correct email');
+            } else {
+              message.error('Error sending OTP:', error.response.data.message);
+            }
+          }          
     }
   };
   
