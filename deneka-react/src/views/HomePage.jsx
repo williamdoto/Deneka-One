@@ -17,8 +17,19 @@ import {
   Avatar,
   Radio,
   Statistic,
-  List
+  List,
+  Switch,
+  Descriptions,
+  Button
 } from "antd";
+
+import {
+  FacebookOutlined,
+  TwitterOutlined,
+  InstagramOutlined,
+  VerticalAlignTopOutlined,
+  CheckOutlined
+} from "@ant-design/icons";
 
 const HomePage = () => {
 
@@ -103,6 +114,24 @@ const HomePage = () => {
       amountcolor: "text-danger",
     },
     {
+      headding: <h6>NEWEST</h6>,
+      avatar: mins,
+      title: "Netflix",
+      description: "27 March 2021, at 12:30 PM",
+      amount: "- $2,500",
+      textclass: "text-light-danger",
+      amountcolor: "text-danger",
+    },
+    {
+      headding: <h6>NEWEST</h6>,
+      avatar: mins,
+      title: "Netflix",
+      description: "27 March 2021, at 12:30 PM",
+      amount: "- $2,500",
+      textclass: "text-light-danger",
+      amountcolor: "text-danger",
+    },
+    {
       avatar: <PlusOutlined style={{ fontSize: 10 }} />,
       title: "Apple",
       description: "27 March 2021, at 04:30 AM",
@@ -147,6 +176,27 @@ const HomePage = () => {
   ];
 
 
+  const pencil = [
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      key={0}
+    >
+      <path
+        d="M13.5858 3.58579C14.3668 2.80474 15.6332 2.80474 16.4142 3.58579C17.1953 4.36683 17.1953 5.63316 16.4142 6.41421L15.6213 7.20711L12.7929 4.37868L13.5858 3.58579Z"
+        className="fill-gray-7"
+      ></path>
+      <path
+        d="M11.3787 5.79289L3 14.1716V17H5.82842L14.2071 8.62132L11.3787 5.79289Z"
+        className="fill-gray-7"
+      ></path>
+    </svg>,
+  ];
+
+
 
   return (
     <div>
@@ -156,7 +206,7 @@ const HomePage = () => {
         className="card-profile-head"
         bodyStyle={{ display: "none" }}
         title={
-          <Row justify="space-between" align="middle" gutter={[24, 0]}>
+          <Row justify="space-between" className="flex-col" align="middle" gutter={[24, 0]}>
             <Col className="col-info">
               <Avatar.Group>
 
@@ -166,14 +216,23 @@ const HomePage = () => {
                   <p>If you didn't complete, you'll miss out our key features.</p>
                 </div>
               </Avatar.Group>
+
+              {/* <Radio.Group defaultValue="a">
+                <Radio.Button value="a">OVERVIEW</Radio.Button>
+              </Radio.Group>
+              <Radio.Group defaultValue="a">
+                <Radio.Button value="a">OVERVIEW</Radio.Button>
+              </Radio.Group>
+              <Radio.Group defaultValue="a">
+                <Radio.Button value="a">OVERVIEW</Radio.Button>
+              </Radio.Group> */}
             </Col>
             <Col
               span={0}
               md={0}
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
+                display: "block",
+                
               }}
             >
               <Radio.Group defaultValue="a">
@@ -249,7 +308,7 @@ const HomePage = () => {
                 </div>
               </Card>
 
-              <Card bordered={false} className="widget-2 h-full">
+              <Card bordered={false} className="widget-2 h-full mb-10">
                 <Statistic
                   title={
                     <>
@@ -259,6 +318,7 @@ const HomePage = () => {
                     </>
                   }
                   value={"$2,000"}
+                  valueStyle={{ color: '#3f8620' }}
                   prefix={<PlusOutlined />}
                 />
               </Card>
@@ -276,6 +336,7 @@ const HomePage = () => {
                     </>
                   }
                   value={"$49,000"}
+                  valueStyle={{ color: '#3f8600' }}
                   prefix={<PlusOutlined />}
                 />
               </Card>
@@ -286,18 +347,18 @@ const HomePage = () => {
         {/* <Carousel3d /> */}
 
 
-        <Row gutter={[24, 0]}>
+        <Row className="p-30" gutter={[24, 0]}>
           
-          <Col span={24} md={8} className="mb-34">
+          <Col xs={24} sm={24} md={24} lg={24} xl={15} className="">
             <Card
-              bordered={false}
+              bordered={true}
               bodyStyle={{ paddingTop: 0 }}
-              className="header-solid h-full  ant-list-yes"
-              title={<h6 className="font-semibold m-0">Your Top 10 Activities</h6>}
+              className="header-solid h-full  ant-list-yes criclebox"
+              title={<h5 className="font-semibold m-0">Your Top 10 Activities</h5>}
               extra={
                 <p className="card-header-date">
                   {calender}
-                  <span>23 - 30 Oct 2023</span>
+                  {/* <span>23 - 30 Oct 2023</span> */}
                 </p>
               }
             >
@@ -324,30 +385,47 @@ const HomePage = () => {
                 )}
               />
 
-              <List
-                className="yestday transactions-list"
-                header={<h6>YESTERDAY</h6>}
-                itemLayout="horizontal"
-                dataSource={yesterday}
-                renderItem={(item) => (
-                  <List.Item>
-                    <List.Item.Meta
-                      avatar={
-                        <Avatar size="small" className={item.textclass}>
-                          {item.avatar}
-                        </Avatar>
-                      }
-                      title={item.title}
-                      description={item.description}
-                    />
-                    <div className="amount">
-                      <span className={item.amountcolor}>{item.amount}</span>
-                    </div>
-                  </List.Item>
-                )}
-              />
+              
             </Card>
           </Col>
+
+
+          <Col span={24} md={8} className="mb-24">
+            <Card
+              bordered={true}
+              className="header-solid card-profile-information criclebox"
+              bodyStyle={{ paddingTop: 0, paddingBottom: 16}}
+            >
+              <div className="package-title">
+                  Starter Package
+              </div>
+              
+              <div className=""> 
+                  <div className="pricing-tag">
+                    $100/month
+                  </div>
+                  <div className="pricing-desc">Discover what services are available to quick start your company</div>
+              </div>
+              <hr className="my-25" />
+              <Descriptions>
+                <Descriptions.Item span={3}>
+                  <CheckOutlined className="color-green" /> 15GB Drive Storage
+                </Descriptions.Item>
+                <Descriptions.Item span={3}>
+                  <CheckOutlined className="color-green" /> Unlimited email
+                </Descriptions.Item>
+                <Descriptions.Item span={3}>
+                  <CheckOutlined className="color-green" /> Access to Shared Drive
+                </Descriptions.Item>
+                <Descriptions.Item span={3}>
+                  <CheckOutlined className="color-green" /> Remote Monitoring & Management (RMM)
+                </Descriptions.Item>
+                
+              </Descriptions>
+              <Button className="w-100">Getting Started</Button>
+
+            </Card>
+        </Col>
       </Row>
 
     </div>
