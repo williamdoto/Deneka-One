@@ -3,6 +3,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const {connectionPool, connectionOptions} = require('../config/snowflake.js'); 
+const snowflake = require('snowflake-sdk');
 
 
 // In-memory storage for OTPs
@@ -51,38 +53,66 @@ const signIn = async (req, res) => {
 };
 
 
-// Generate OTP
 const generateOtp = async (req, res) => {
   try {
     console.log("generateOtp called with request body:", req.body);
     const { email } = req.body;
-    const otp = Math.floor(1000 + Math.random() * 9000); // Generate a 4-digit OTP
-    
-        // Check if email is provided in the request body
-    if (!email) {
-      return res.status(400).json({ success: false, message: 'Email is required' });
-    }
-    // Send OTP to user's email
-    const mailOptions = {
-      from: '"OldPhoneDeals" <oldphonedeals.group05@zohomail.com.au>',
-      to: email,
-      subject: 'One Time Password',
-      text: `Your One Time Password is: ${otp}`,
-    };
-    await transporter.sendMail(mailOptions);
-    
-    // Store OTP with email temporarily
-    otpStorage[email] = {
-      otp,
-      timestamp: Date.now(),
-    };
-    
-    res.json({ success: true, message: 'OTP sent to email' });
+
+    const connection = snowflake.createConnection(connectionOptions);
+
+    connection.connect((err, conn) => {
+      if (err) {
+        console.error('Unable to connect:', err);
+        return res.status(500).json({ success: false, message: 'Internal Server Error' });
+      }
+
+      const query = `SELECT COUNT(*) as count FROM USER WHERE UPPER(EMAIL) = UPPER('${email}')`;
+      conn.execute({
+        sqlText: query,
+        complete: (err, stmt, rows) => {
+          if (err) {
+            console.error(`Failed to execute statement due to the following error: ${err}`);
+            return res.status(500).json({ success: false, message: 'Internal Server Error' });
+          }
+
+          console.log(`Email count from database for ${email}: ${rows[0].count}`);
+          console.log("Returned rows:", rows);
+
+          if (!rows[0] || rows[0].COUNT === 0) {
+            return res.status(400).json({ success: false, message: 'Email not registered' });
+          }
+
+          const otp = Math.floor(1000 + Math.random() * 9000);
+
+          const mailOptions = {
+            from: '"OldPhoneDeals" <oldphonedeals.group05@zohomail.com.au>',
+            to: email,
+            subject: 'One Time Password',
+            text: `Your One Time Password is: ${otp}`,
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Error sending email:', error);
+              return res.status(500).json({ success: false, message: 'Failed to send OTP' });
+            }
+
+            otpStorage[email] = {
+              otp,
+              timestamp: Date.now(),
+            };
+
+            res.json({ success: true, message: 'OTP sent to email' });
+          });
+        }
+      });
+    });
   } catch (error) {
     console.error('Error generating OTP:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
+
 
 // Verify OTP
 const verifyOtp = async (req, res) => {

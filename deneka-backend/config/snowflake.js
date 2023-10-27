@@ -20,4 +20,8 @@ const poolOptions = {
 // Create the Snowflake connection pool
 const connectionPool = snowflake.createPool(connectionOptions, poolOptions);
 
-module.exports = connectionPool;
+
+module.exports = {
+  connectionPool,
+  connectionOptions
+};
