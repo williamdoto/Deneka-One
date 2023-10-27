@@ -130,20 +130,22 @@ const verifyOtp = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid OTP' });
     }
     
-    
     // Check for OTP expiration (e.g., 5 minutes)
     const isOtpExpired = Date.now() - storedOtpInfo.timestamp > 5 * 60 * 1000;
     if (isOtpExpired) {
       return res.status(400).json({ success: false, message: 'OTP has expired' });
     }
     
-    // If OTP is valid, proceed with next steps
-    // [Your logic after OTP verification, e.g., sending a JWT, creating a session, etc.]
-    
     // Clear the OTP from storage
     delete otpStorage[email];
     
-    res.json({ success: true, message: 'OTP verified' });
+    // Generate a JWT token
+    const token = jwt.sign({ userEmail: email }, 'Your-Secret-Key', {
+      expiresIn: '24h',
+    });
+
+
+    res.json({ success: true, message: 'OTP verified', token });
   } catch (error) {
     console.error('Error verifying OTP:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });

@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {FloatButton, ConfigProvider, Layout, theme } from "antd";
 import SidebarMenu from "./components/Sidebar/Sidebar";
 import AppRoutes from "./AppRoutes";
 import TopBar from "./components/TopBar/TopBar";
-import { useAuthContext } from './context/AuthContext';
+import { AuthProvider, useAuthContext } from './context/AuthContext';
 import NotificationBar from "./components/NotificationBar/NotificationBar";
-import SigninPage from './views/SignInPage/SigninPage';
 import FeedbackButton from "./components/FloatButton/FeedbackButton";
 import { useLocation } from 'react-router-dom';
 
@@ -14,12 +13,20 @@ const { Header, Content, Sider } = Layout;
 const { defaultAlgorithm, darkAlgorithm } = theme;
 
 function App() {
-  const { user } = useAuthContext();
+  const { setUser } = useAuthContext();
   const [collapsed, setCollapsed] = useState(false);
   const [isSidebarRight, setIsSidebarRight] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [notificationVisible, setNotificationVisible] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+      // If a JWT token exists in local storage, set the user as authenticated
+      setUser({ isAuthenticated: true });
+    }
+  }, []);
 
   const [drawerWidth, setDrawerWidth] = useState(0); // Define drawerWidth and setDrawerWidth
 
@@ -66,6 +73,7 @@ function App() {
   };
 
   return (
+    <AuthProvider>
     <ConfigProvider
       theme={{
         algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
@@ -128,6 +136,7 @@ function App() {
           />)}
       </Layout>
     </ConfigProvider>
+    </AuthProvider>
   );
 
 }

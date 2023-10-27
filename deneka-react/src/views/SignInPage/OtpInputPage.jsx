@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Card, Form, Input, Button, message } from 'antd';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuthContext } from '../../context/AuthContext';
 
 const OtpInputPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email;
+  const { setUser } = useAuthContext();
 
 
 
@@ -16,7 +18,14 @@ const handleSubmit = async (values) => {
       const response = await axios.post('http://localhost:1337/api/verify-otp', { ...values, email });
       if (response.data && response.data.success) {
         message.success('OTP validated!');
-        navigate('/');
+
+        // Store the JWT token in local storage
+        localStorage.setItem('jwtToken', response.data.token);
+
+        // Update the user's authenticated state in the AuthContext
+        setUser({ isAuthenticated: true });
+
+        navigate('/dashboard');
       } else {
         message.error('Error:', response.data.message);
       }
