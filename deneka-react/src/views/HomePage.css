@@ -5,8 +5,8 @@
     /* background-color: red; */
 }
 
-.mb-24 {    
-    margin-bottom: 24px;
+.mb-34 {    
+    margin: 34px;
 }
 
 .mb-12 {
@@ -102,8 +102,6 @@ small.redtext {
 }
 
 /* Card Css */
-
-
 .card-credit {
     background-image: url("../../public/info-card-2.jpg");
     background-position: 50%;

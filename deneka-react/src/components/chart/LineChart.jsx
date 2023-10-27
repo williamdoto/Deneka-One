@@ -3,6 +3,7 @@ import ReactApexChart from "react-apexcharts";
 import { Typography } from "antd";
 import { MinusOutlined } from "@ant-design/icons";
 import lineChart from "./configs/lineChart";
+import './LineChart.css';
 
 function LineChart() {
   const { Title, Paragraph } = Typography;
@@ -30,7 +31,7 @@ function LineChart() {
         series={lineChart.series}
         type="area"
         height={350}
-        width={"100%"}
+        width={"95%"}
       />
     </>
   );
