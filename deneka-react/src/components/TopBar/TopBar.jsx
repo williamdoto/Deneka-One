@@ -1,38 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './TopBar.css';
-import { UserOutlined, BellOutlined, BulbOutlined, SearchOutlined  } from '@ant-design/icons';
-import { Dropdown, Space, theme, Button, Input } from 'antd';
+import { UserOutlined, BellOutlined, BulbOutlined, SearchOutlined } from '@ant-design/icons';
+import { Dropdown, Input } from 'antd';
 import logo from '../../assets/media/Deneka-One.png'; // Importing the logo
-
-const items = [
-  {
-    label: (
-      <a target="_blank" rel="noopener noreferrer" href="https://www.google.com">
-       My Profile
-      </a>
-    ),
-    key: '0',
-  },
-  {
-    label: (
-      <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-        Settings
-      </a>
-    ),
-    key: '1',
-  },
-  {
-    type: 'divider',
-  },
-  {
-    label: 'Log Out',
-    key: '3',
-    disabled: true,
-  },
-];
 
 const  TopBar = ({ isDarkMode, toggleDarkMode, toggleNotificationBar }) => {
   const [searchInput, setSearchInput] = useState('');
+  const navigate = useNavigate();
 
   const handleSearchInputChange = (e) => {
     setSearchInput(e.target.value);
@@ -43,6 +18,41 @@ const  TopBar = ({ isDarkMode, toggleDarkMode, toggleNotificationBar }) => {
     console.log('Search:', searchInput);
     // Implement search functionality here
   };
+
+  const handleLogout = () => {
+    // Clear the JWT token
+    localStorage.removeItem('jwtToken'); // or clear cookies if you're using cookies
+
+    // Redirect to the login page
+    navigate('/emailInput');
+  };
+
+  const items = [
+    {
+      label: (
+        <a target="_blank" rel="noopener noreferrer" href="https://www.google.com">
+         My Profile
+        </a>
+      ),
+      key: '0',
+    },
+    {
+      label: (
+        <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
+          Settings
+        </a>
+      ),
+      key: '1',
+    },
+    {
+      type: 'divider',
+    },
+    {
+      label: 'Log Out',
+      key: '3',
+      onClick: handleLogout, 
+    },
+  ];
 
   return (
     <div className={`topbar ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
