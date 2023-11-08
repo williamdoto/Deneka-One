@@ -24,7 +24,7 @@ const  TopBar = ({ isDarkMode, toggleDarkMode, toggleNotificationBar }) => {
     localStorage.removeItem('jwtToken'); // or clear cookies if you're using cookies
 
     // Redirect to the login page
-    navigate('/emailInput');
+    navigate('/signin');
   };
 
   const items = [

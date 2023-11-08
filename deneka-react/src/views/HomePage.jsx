@@ -4,7 +4,7 @@ import "./HomePage.css"
 import DashboardBanner from './DashboardBanner';
 import LineChart from "../components/chart/LineChart";
 import PricingCard from "../components/Card/PricingCard";
-import Carousel3d from "../components/Carousel/Carousel";
+// import Carousel3d from "../components/Carousel/Carousel";
 
 import { DollarOutlined, ShoppingOutlined, TeamOutlined, RiseOutlined} from '@ant-design/icons';
 import { PlusOutlined, ExclamationOutlined } from "@ant-design/icons";

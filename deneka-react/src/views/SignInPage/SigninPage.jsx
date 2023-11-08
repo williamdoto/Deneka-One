@@ -7,7 +7,7 @@ import axios from 'axios';
 import './SigninPage.css';
 import { useNavigate } from 'react-router-dom';
 import { setToken } from '../../helpers'; // Make sure the path is correct
-import { useAuthContext } from '../../context/AuthContext'; // Import the hook
+import { useAuthContext } from '../../context/AuthContext';
 
 
 
@@ -51,20 +51,28 @@ const { setUser } = useAuthContext(); // Destructure setUser from the context
 
 const handleSubmit = async (values) => {
     try {
-        const response = await axios.post('http://localhost:3500/api/signin', values);
-        if (response.data && response.data.success) {
-            console.log('Signed in successfully:', response.data);
-            // Assuming that the backend returns the token and user's data in the response
-            setToken("response.data.token"); // Save the token using the helper function
-            setUser("response.data.user");   // Update the context with user's data
-            navigate('/');                // Redirect to the home route
-        } else {
-            console.log('Error:', response.data.message);
-        }
+      const response = await axios.post('http://localhost:1337/api/signin', values);
+  
+      if (response.data && response.data.success) {
+        // Save the token using the helper function you've already set up
+        setToken(response.data.token); // Remove the quotes around response.data.token
+  
+        // If you're passing user data, update the context
+        // setUser(response.data.user); // Uncomment if you're passing user data
+        setUser({ isAuthenticated: true });
+        // Redirect to the dashboard
+        navigate('/dashboard');
+      } else {
+        // Display an error message to the user
+        console.log('Error signing in:', response.data.error);
+      }
     } catch (error) {
-        console.log('Sign in error:', error.response ? error.response.data : error.message);
+      // Display an error message to the user
+      console.error('Sign in error:', error.response ? error.response.data.error : error.message);
     }
-};
+  };
+  
+  
 
 return (
   <div className="card-container">

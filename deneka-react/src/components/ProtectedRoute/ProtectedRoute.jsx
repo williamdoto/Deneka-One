@@ -6,7 +6,7 @@ const ProtectedRoute = ({ element, ...rest }) => {
 
   // If user isn't authenticated, navigate to the signin page.
   if (!user.isAuthenticated) {
-    return <Navigate to="/emailInput" />;
+    return <Navigate to="/signin" />;
   }
 
   // If authenticated, render the specified component.

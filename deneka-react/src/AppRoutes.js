@@ -21,8 +21,8 @@ const AppRoutes = () => {
       <Route path="/emailinput" element={<EmailInputPage />} />
       <Route path="/otpinput" element={<OtpInputPage />} />
       <Route path="/forgotpassword" element={<ForgotpasswordPage />} />
-      {/* <Route path="/dashboard" element={<ProtectedRoute element={<HomePage />} />} /> */}
-      <Route path="/dashboard" element={<HomePage />} />
+      <Route path="/dashboard" element={<ProtectedRoute element={<HomePage />} />} />
+      {/* <Route path="/dashboard" element={<HomePage />} /> */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

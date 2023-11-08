@@ -10,6 +10,52 @@ const snowflake = require('snowflake-sdk');
 // In-memory storage for OTPs
 const otpStorage = {};
 
+async function findUserByEmail(email) {
+  // Create a new connection to the Snowflake database
+  const connection = snowflake.createConnection(connectionOptions);
+
+  return new Promise((resolve, reject) => {
+    connection.connect((err, conn) => {
+      if (err) {
+        console.error('Unable to connect to Snowflake:', err);
+        return reject(err);
+      }
+
+      // Log the email being used to find the user
+      console.log("Looking up user with email:", email.toLowerCase());
+
+      const query = `SELECT * FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER WHERE LOWER(EMAIL) = LOWER(?)`;
+
+      conn.execute({
+        sqlText: query,
+        binds: [email], // Email is already expected to be in the correct case
+        complete: (err, stmt, rows) => {
+          if (err) {
+            console.error('Failed to execute query:', err);
+            return reject(err);
+          }
+          console.log("Query executed, number of rows found:", rows.length);
+          if (rows.length > 0) {
+            const user = rows[0];
+            resolve({
+              id: user.ID,
+              firstName: user.FIRST_NAME,
+              lastName: user.LAST_NAME,
+              email: user.EMAIL,
+              passwordHash: user.PASSWORD_HASH,
+              // ... other properties as needed
+            });
+          } else {
+            resolve(null);
+          }
+        }
+      });
+    });
+  });
+}
+
+
+
 // Configure Nodemailer transporter
 const transporter = nodemailer.createTransport({
   host: 'smtp.zoho.com.au',
@@ -27,30 +73,38 @@ const signIn = async (req, res) => {
 
   try {
     // Check if the user exists in the database
+    const user = await findUserByEmail(email);
+    console.log(user);
+    if (!user) {
+      console.log("Wrong user or email not found");
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    
+    console.log("Retrieved hashed password:", user.passwordHash);
+    // console.log(user.hashedpassword);
+    // console.log(user.passwordHash);
+    // console.log(password);
 
-    // if (!user) {
-    //   return res.status(401).json({ error: 'Invalid credentials' });
-    // }
+    // Compare the provided password with the hashed password
+    const isPasswordMatch = await bcrypt.compare(password, user.passwordHash);
+    if (!isPasswordMatch) {
+      console.log("Password does not match.");
+      return res.status(401).json({ error: 'Password does not match.' });
+    }
 
-    // // Compare the provided password with the hashed password
-    // const isPasswordMatch = await bcrypt.compare(password, user.password);
-    // if (!isPasswordMatch) {
-    //   return res.status(401).json({ error: 'Invalid credentials' });
-    // }
-
-    // // Generate a JWT token
-    // const token = jwt.sign({ userId: user.email }, 'Justins-secret-key', {
-    //   expiresIn: '24h',
-    // });
-    res.json({success:true})
+    // Generate a JWT token
+    const token = jwt.sign({ userId: user.id }, 'your_jwt_secret_key', {
+      expiresIn: '24h',
+    });
 
     // Send the token in the response
-    // res.json({ success: true, token });
+    res.json({ success: true, token, userId: user.id }); // Include the user ID in the response
   } catch (error) {
     console.error('Error signing in:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
+
 
 
 const generateOtp = async (req, res) => {

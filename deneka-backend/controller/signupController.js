@@ -209,7 +209,8 @@ const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const connectionPool = require('../config/snowflake');
+const snowflake = require('snowflake-sdk');
+const {connectionPool, connectionOptions} = require('../config/snowflake');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.zoho.com.au',
@@ -298,45 +299,66 @@ const getRecentAddedUser = async (res) => {
 const userSignUp = async (req, res) => {
   console.log("Signing up for USER!");
 
-  const { name, companyName, email, location} = req.body;
-  console.log(name, companyName, email, location);
+  const { name, companyName, email, location, password } = req.body;
+  console.log(name, companyName, email, location, password);
 
-  connectionPool.use(async (clientConnection) => {
-    console.log("HERE");
+  // Generate a salt and hash the password
+  const salt = await bcrypt.genSalt();
+  const hashedPassword = await bcrypt.hash(password, salt);
+  console.log("Hashed Password:", hashedPassword);
+
+  // Create a new connection using the Snowflake SDK
+  const connection = snowflake.createConnection(connectionOptions);
+
+  // Attempt to connect to Snowflake
+  connection.connect(async (err, conn) => {
+    if (err) {
+      console.error('Unable to connect to Snowflake:', err);
+      return res.status(500).json({ message: "Failed to connect to the database." });
+    }
+
     try {
-        const insertUser = `
-          INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER
-            (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_SALT, PASSWORD_HASH, PHONE_NUMBER, ISVERIFIED, VERIFICATIONTOKEN, RESETPASSWORDTOKEN)
-          VALUES
-            (?, ?, ?, ?, ?, ?, ?, ?, ?);
-        `;
-    
-        const binds = [name, companyName, email, 'somesaltvalue', 'hashedpassword', '123-456-7890', false, 'verificationtoken', 'resetpasswordtoken'];
+      // Define the SQL insert statement
+      const insertUser = `
+        INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER
+          (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_SALT, PASSWORD_HASH, PHONE_NUMBER, ISVERIFIED, VERIFICATIONTOKEN, RESETPASSWORDTOKEN)
+        VALUES
+          (?, ?, ?, ?, ?, ?, ?, ?, ?);
+      `;
 
-        const statement = await clientConnection.execute({
-            sqlText: insertUser,
-            binds: binds,
-            complete: function (err, stmt, rows) {
-                var stream = stmt.streamRows();
-                console.log(stream);
+      // Bind parameters to avoid SQL injection
+      const binds = [name, companyName, email, salt, hashedPassword, '123-456-7890', false, uuid.v4(), uuid.v4()];
 
-                stream.on('data', function (row) {
-                    console.log(row);
-                });
-                stream.on('end', async (row) => {
-                    console.log('Success! All rows consumed');
-                    getRecentAddedUser(res);
-                });
-            }
-        });
+      // Execute the insert statement
+      const statement = connection.execute({
+        sqlText: insertUser,
+        binds: binds,
+        complete: (err, stmt, rows) => {
+          if (err) {
+            console.error('Failed to execute statement:', err);
+            return res.status(500).json({ message: "Failed to insert user data." });
+          }
+          console.log('User created:', rows);
+          console.log("Hashed Password:", hashedPassword);
+
+          // Send the verification code via email
+          sendCode(email).catch(console.error);
+
+          // Respond to the client indicating success
+          res.json({ message: "User signed up successfully" });
+        }
+      });
     } catch (error) {
-        console.error('Error inserting data:', error);
-        res.json({message: "User signed up failed"});
-    }    
+      console.error('Error during user signup:', error);
+      res.status(500).json({ message: "User signup failed due to an error." });
+    } finally {
+      // Always close the connection whether the try block succeeds or not
+      connection.destroy();
+    }
   });
+};
 
-  // Send verification code via email after signing up
-  sendCode(email).catch(err => console.error("Failed to send email:", err));
-}
+
+
 
 module.exports = { userSignUp, verify, sendCode, getRecentAddedUser };

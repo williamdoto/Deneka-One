@@ -101,6 +101,9 @@ const SignupPage = () => {
                   <Option value="Brisbane">Brisbane</Option>
                 </Select>
               </Form.Item>
+              <Form.Item className="form-input" name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
+                <Input.Password prefix={<i className="fa fa-lock" aria-hidden="true"></i>} placeholder="Password *" />
+              </Form.Item>
               <Form.Item name="agreement" valuePropName="checked" rules={[{ required: true, message: 'Please agree to the terms of service and privacy policy!' }]}>
                 <Checkbox>
                   I agree to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>
