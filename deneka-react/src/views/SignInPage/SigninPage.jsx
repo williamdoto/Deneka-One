@@ -44,6 +44,10 @@ const SigninPage = () => {
     }
 };
 
+const handleEmailInputRedirect = () => {
+    navigate('/emailInput');
+  };
+
 
 // ... inside your SigninPage component:
 const navigate = useNavigate();
@@ -103,6 +107,11 @@ return (
                           <div className="signin-link">
                               <span onClick={handleForgotPassword}>
                                   Forgot Password?
+                              </span>
+                          </div>
+                          <div className="signin-link">
+                              <span onClick={handleEmailInputRedirect}>
+                                  One-Time Password
                               </span>
                           </div>
                       </Form.Item>
