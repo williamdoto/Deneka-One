@@ -3,7 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import SignupPage from './views/SignUpPage/SignupPage';
 import SigninPage from './views/SignInPage/SigninPage';
 import EmailInputPage from './views/SignInPage/EmailInputPage'; 
-import OtpInputPage from './views/SignInPage/OtpInputPage';       
+import OtpInputPage from './views/SignInPage/OtpInputPage';
+import SetupTOTPPage from './views/SignInPage/SetupTOTPPage';
+import TOTPInputPage from './views/SignInPage/TOTPInputPage';
 import HomePage from './views/HomePage';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import ForgotpasswordPage from './components/ForgotPasswordPage';
@@ -21,6 +23,8 @@ const AppRoutes = () => {
       <Route path="/emailinput" element={<EmailInputPage />} />
       <Route path="/otpinput" element={<OtpInputPage />} />
       <Route path="/forgotpassword" element={<ForgotpasswordPage />} />
+      <Route path="/setup-totp" element={<SetupTOTPPage />} />
+      <Route path="/totpinput" element={<TOTPInputPage />} />
       <Route path="/dashboard" element={<ProtectedRoute element={<HomePage />} />} />
       {/* <Route path="/dashboard" element={<HomePage />} /> */}
       <Route path="*" element={<NotFoundPage />} />

@@ -65,7 +65,7 @@ const handleSubmit = async (values) => {
         // setUser(response.data.user); // Uncomment if you're passing user data
         setUser({ isAuthenticated: true });
         // Redirect to the dashboard
-        navigate('/dashboard');
+        navigate('/totpinput', { state: { email: values.email } });
       } else {
         // Display an error message to the user
         console.log('Error signing in:', response.data.error);

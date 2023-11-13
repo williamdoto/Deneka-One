@@ -6,8 +6,8 @@ const cors = require('cors')
 const path = require('path')
 const signupRoute = require('./routes/signupRoute')
 const signinRoute = require('./routes/signinRoute')
+const { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp } = require('./controller/signinController')
 // const corsOptions = require('./config/corsOptions');
-
 
 const PORT = process.env.PORT || 1337;
 
@@ -29,9 +29,14 @@ app.use(cookieParser())
 app.use('/', express.static(path.join(__dirname, 'public')))
 
 
+
 // define Routes
 app.use('/api', signupRoute)
 app.use('/api', signinRoute)
+app.post('/api/setup-totp', setupTotp);
+app.post('/api/verify-totp', verifyTotp);
+
+
 
 app.all('*', (req, res) => {
     res.status(404).send("Error")
@@ -44,9 +49,6 @@ app.all('*', (req, res) => {
     // }
 
 })
-
-
-
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
