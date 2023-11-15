@@ -185,8 +185,7 @@ const signIn = async (req, res) => {
 };
 
 
-
-const generateOtp = async (req, res) => {
+async function generateOtp(req, res) {
   try {
     console.log("generateOtp called with request body:", req.body);
     const { email } = req.body;
@@ -254,7 +253,7 @@ const generateOtp = async (req, res) => {
 
 
 // Verify OTP function
-const verifyOtp = async (req, res) => {
+async function verifyOtp(req, res) {
   try {
     const { email, otp } = req.body;
 

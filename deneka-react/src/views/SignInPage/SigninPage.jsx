@@ -92,7 +92,7 @@ return (
                           <Input prefix={<i className="fa fa-envelope-o" aria-hidden="true"></i>} placeholder="Email *" />
                       </Form.Item>
                       <Form.Item className="form-input" name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
-                          <Input prefix={<i className="fa fa-unlock-alt" aria-hidden="true"></i>} placeholder="Password *" />
+                          <Input.Password prefix={<i className="fa fa-unlock-alt" aria-hidden="true"></i>} placeholder="Password *" />
                       </Form.Item>
                       <Form.Item>
                           <div className="signup-button-container">
