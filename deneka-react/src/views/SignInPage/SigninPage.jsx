@@ -48,6 +48,9 @@ const handleEmailInputRedirect = () => {
     navigate('/emailInput');
   };
 
+const handlePwdEmailInputRedirect = () => {
+    navigate('/PwdEmailInputPage');
+};
 
 // ... inside your SigninPage component:
 const navigate = useNavigate();
@@ -105,7 +108,7 @@ return (
                               </Button>
                           </div>
                           <div className="signin-link">
-                              <span onClick={handleForgotPassword}>
+                              <span onClick={handlePwdEmailInputRedirect}>
                                   Forgot Password?
                               </span>
                           </div>
