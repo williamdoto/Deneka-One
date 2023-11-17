@@ -91,9 +91,11 @@ async function storeTotpSecret(email, secret) {
 }
 
 
+
 async function setupTotp(req, res) {
   const { email } = req.body; // Ensure email is being passed correctly
   console.log("Email in setupTotp:", email);
+
   // Generate a TOTP secret
   const secret = speakeasy.generateSecret({ length: 20 });
   console.log("Secret in setupTotp:", secret.base32);
@@ -105,14 +107,13 @@ async function setupTotp(req, res) {
     // Generate a QR code for scanning
     const qrCodeUrl = await generateQrCode(secret.base32);
 
-    // Send back the QR code URL
-    res.json({ secret: secret.base32, qrCodeUrl });
+    // Send back the QR code URL and the secret
+    res.json({ secret: secret.base32, qrCodeUrl, plainSecret: secret.base32 });
   } catch (error) {
     console.error('Error setting up TOTP:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 }
-
 
 async function generateQrCode(secret) {
   const qrcode = require('qrcode');

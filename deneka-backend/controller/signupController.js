@@ -297,66 +297,74 @@ const getRecentAddedUser = async (res) => {
 }
 
 const userSignUp = async (req, res) => {
-  console.log("Signing up for USER!");
+  try {
+    console.log("Signing up for USER!");
 
-  const { name, companyName, email, location, password } = req.body;
-  console.log(name, companyName, email, location, password);
+    const { name, companyName, email, location, password } = req.body;
+    console.log(name, companyName, email, location, password);
 
-  // Generate a salt and hash the password
-  const salt = await bcrypt.genSalt();
-  const hashedPassword = await bcrypt.hash(password, salt);
-  console.log("Hashed Password:", hashedPassword);
+    // Generate a salt and hash the password
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+    console.log("Hashed Password:", hashedPassword);
 
-  // Create a new connection using the Snowflake SDK
-  const connection = snowflake.createConnection(connectionOptions);
+    // Create a new connection using the Snowflake SDK
+    const connection = snowflake.createConnection(connectionOptions);
 
-  // Attempt to connect to Snowflake
-  connection.connect(async (err, conn) => {
-    if (err) {
-      console.error('Unable to connect to Snowflake:', err);
-      return res.status(500).json({ message: "Failed to connect to the database." });
-    }
+    // Attempt to connect to Snowflake
+    await new Promise((resolve, reject) => {
+      connection.connect((err, conn) => {
+        if (err) {
+          console.error('Unable to connect to Snowflake:', err);
+          reject(err);
+        }
+        resolve(conn);
+      });
+    });
 
-    try {
-      // Define the SQL insert statement
-      const insertUser = `
-        INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER
-          (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_SALT, PASSWORD_HASH, PHONE_NUMBER, ISVERIFIED, VERIFICATIONTOKEN, RESETPASSWORDTOKEN)
-        VALUES
-          (?, ?, ?, ?, ?, ?, ?, ?, ?);
-      `;
+    // Define the SQL insert statement
+    const insertUser = `
+      INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER
+        (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_SALT, PASSWORD_HASH, PHONE_NUMBER, ISVERIFIED, VERIFICATIONTOKEN, RESETPASSWORDTOKEN)
+      VALUES
+        (?, ?, ?, ?, ?, ?, ?, ?, ?);
+    `;
 
-      // Bind parameters to avoid SQL injection
-      const binds = [name, companyName, email, salt, hashedPassword, '123-456-7890', false, uuid.v4(), uuid.v4()];
+    // Bind parameters to avoid SQL injection
+    const binds = [name, companyName, email, salt, hashedPassword, '123-456-7890', false, uuid.v4(), uuid.v4()];
 
-      // Execute the insert statement
-      const statement = connection.execute({
+    // Execute the insert statement
+    await new Promise((resolve, reject) => {
+      connection.execute({
         sqlText: insertUser,
         binds: binds,
         complete: (err, stmt, rows) => {
           if (err) {
             console.error('Failed to execute statement:', err);
-            return res.status(500).json({ message: "Failed to insert user data." });
+            reject(err);
           }
           console.log('User created:', rows);
-          console.log("Hashed Password:", hashedPassword);
-
-          // Send the verification code via email
-          sendCode(email).catch(console.error);
-
-          // Respond to the client indicating success
-          res.json({ message: "User signed up successfully" });
+          resolve(rows);
         }
       });
-    } catch (error) {
-      console.error('Error during user signup:', error);
-      res.status(500).json({ message: "User signup failed due to an error." });
-    } finally {
-      // Always close the connection whether the try block succeeds or not
+    });
+
+    // Send the verification code via email
+    await sendCode(email);
+
+    // Respond to the client indicating success
+    res.json({ message: "User signed up successfully" });
+  } catch (error) {
+    console.error('Error during user signup:', error);
+    res.status(500).json({ message: "User signup failed due to an error." });
+  } finally {
+    // Always close the connection whether the try block succeeds or not
+    if (connection) {
       connection.destroy();
     }
-  });
+  }
 };
+
 
 
 
