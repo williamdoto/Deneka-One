@@ -7,6 +7,7 @@ const path = require('path')
 const signupRoute = require('./routes/signupRoute')
 const signinRoute = require('./routes/signinRoute')
 const { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp } = require('./controller/signinController')
+const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
 // const corsOptions = require('./config/corsOptions');
 
 const PORT = process.env.PORT || 1337;
@@ -37,6 +38,10 @@ app.post('/api/setup-totp', setupTotp);
 app.post('/api/verify-totp', verifyTotp);
 
 
+// Password reset routes
+app.post('/api/request-reset', requestReset);
+app.get('/api/verify-reset/:token', verifyResetToken); // Assuming token is sent as a URL parameter
+app.post('/api/reset-password', resetPassword);
 
 app.all('*', (req, res) => {
     res.status(404).send("Error")

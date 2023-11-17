@@ -6,6 +6,8 @@ import EmailInputPage from './views/SignInPage/EmailInputPage';
 import OtpInputPage from './views/SignInPage/OtpInputPage';
 import SetupTOTPPage from './views/SignInPage/SetupTOTPPage';
 import TOTPInputPage from './views/SignInPage/TOTPInputPage';
+import PwdEmailInputPage from './views/ResetPasswordPage/EmailInputPage';
+import PasswordResetPage from './views/ResetPasswordPage/PasswordResetPage';
 import HomePage from './views/HomePage';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import ForgotpasswordPage from './components/ForgotPasswordPage';
@@ -22,7 +24,8 @@ const AppRoutes = () => {
       <Route path="/signin" element={<SigninPage />} />
       <Route path="/emailinput" element={<EmailInputPage />} />
       <Route path="/otpinput" element={<OtpInputPage />} />
-      <Route path="/forgotpassword" element={<ForgotpasswordPage />} />
+      <Route path="/PwdEmailInputPage" element={<PwdEmailInputPage />} />
+      <Route path="/PasswordResetPage/:token" element={<PasswordResetPage />} />
       <Route path="/setup-totp" element={<SetupTOTPPage />} />
       <Route path="/totpinput" element={<TOTPInputPage />} />
       <Route path="/dashboard" element={<ProtectedRoute element={<HomePage />} />} />
