@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, Switch } from 'antd';
 import {
     ShopOutlined,
@@ -35,9 +36,12 @@ class SidebarMenu extends React.Component {
                     <Menu.Item key="5" icon={<PieChartOutlined style={{ color: iconColor }} />}>Option 1</Menu.Item>
                     <Menu.Item key="6" icon={<DesktopOutlined style={{ color: iconColor }} />}>Option 2</Menu.Item>
                 </SubMenu>
-                <Menu.Item key="2" icon={<ShopOutlined style={{ color: iconColor }} />}>
-                    {!collapsed && 'Marketplace'}
-                </Menu.Item>
+   
+                <SubMenu key="sub2" icon={<ShopOutlined style={{ color: iconColor }} />} title={!collapsed && 'Marketplace'}>
+    <Menu.Item key="9">
+        <Link to="/services">Services</Link>
+    </Menu.Item>
+</SubMenu>
                 <SubMenu key="sub3" icon={<MoneyCollectOutlined style={{ color: iconColor }} />} title={!collapsed && 'Finance'}>
                     <Menu.Item key="7">Option 3</Menu.Item>
                     <Menu.Item key="8">Option 4</Menu.Item>

@@ -12,6 +12,7 @@ import HomePage from './views/HomePage';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import ForgotpasswordPage from './components/ForgotPasswordPage';
 import NotFoundPage from './views/Error/NotFoundPage';
+import ServiceManager from './views/CRMPage/ServiceManager';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 
@@ -28,7 +29,10 @@ const AppRoutes = () => {
       <Route path="/PasswordResetPage/:token" element={<PasswordResetPage />} />
       <Route path="/setup-totp" element={<SetupTOTPPage />} />
       <Route path="/totpinput" element={<TOTPInputPage />} />
-      <Route path="/dashboard" element={<ProtectedRoute element={<HomePage />} />} />
+      {/* <Route path="/dashboard" element={<ProtectedRoute element={<HomePage />} />} /> */}
+      <Route path="/dashboard" element={<HomePage />} />
+      <Route path="/services" element={<ServiceManager />} />
+
       {/* <Route path="/dashboard" element={<HomePage />} /> */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
