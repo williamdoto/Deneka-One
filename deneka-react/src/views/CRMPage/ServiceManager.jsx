@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import AddService from './AddService'; // Assuming ServiceManager is in the same directory
+import CreateCategory from './CreateCategory';
 
 const items = [
   {
@@ -49,7 +50,7 @@ const ServiceManager = () => {
       case 'create-service':
         return <AddService/>
       case 'create-category':
-        // return <ServiceManager />;
+        return <CreateCategory/>
       case 'manage-services':
         // return <ManageServicesComponent />;
         return <p>Manage Services</p>;
