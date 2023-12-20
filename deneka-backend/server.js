@@ -10,6 +10,8 @@ const { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp } 
 const { companySignUp } = require('./controller/companySignupController');
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
 // const corsOptions = require('./config/corsOptions');
+require('dotenv').config();
+const axios = require('axios');
 
 const PORT = process.env.PORT || 1337;
 
@@ -17,6 +19,32 @@ const corsOptions = {
     origin: 'http://localhost:3000', // Frontend's origin
     credentials: true, // Allow cookies
 };
+
+
+
+async function getAccessToken() {
+  try {
+    const response = await axios.post('https://login.microsoftonline.com/common/oauth2/v2.0/token', new URLSearchParams({
+      client_id: process.env.CLIENT_ID,
+      scope: 'https://graph.microsoft.com/.default',
+      client_secret: process.env.CLIENT_SECRET,
+      grant_type: 'client_credentials'
+    }), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+
+    console.log("Access Token: ", response.data.access_token);
+    return response.data.access_token;
+  } catch (error) {
+    console.error("Error getting access token: ", error);
+  }
+}
+
+// Call the function to get the token
+getAccessToken();
+
 
 app.use(cors(corsOptions));
 
