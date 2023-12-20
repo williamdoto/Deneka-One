@@ -7,6 +7,7 @@ const path = require('path')
 const signupRoute = require('./routes/signupRoute')
 const signinRoute = require('./routes/signinRoute')
 const { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp } = require('./controller/signinController')
+const { companySignUp } = require('./controller/companySignupController');
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
 // const corsOptions = require('./config/corsOptions');
 
@@ -30,10 +31,10 @@ app.use(cookieParser())
 app.use('/', express.static(path.join(__dirname, 'public')))
 
 
-
 // define Routes
 app.use('/api', signupRoute)
 app.use('/api', signinRoute)
+app.post('/api/company-signup', companySignUp);
 app.post('/api/setup-totp', setupTotp);
 app.post('/api/verify-totp', verifyTotp);
 
