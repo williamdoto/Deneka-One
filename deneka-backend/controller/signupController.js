@@ -305,6 +305,9 @@ const userSignUp = async (req, res) => {
     const ipAddress = req.ip; // Retrieving the IP Address
     console.log(name, companyName, email, location, password, ipAddress);
 
+    // Retrieve device information
+    const deviceInfo = req.useragent.source; // This will contain a string describing the user's device
+
     // Generate a salt and hash the password
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -326,13 +329,14 @@ const userSignUp = async (req, res) => {
 
     // Define the SQL insert statement
     const insertUser = `
-      INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER
-        (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_SALT, PASSWORD_HASH, PHONE_NUMBER, ISVERIFIED, VERIFICATIONTOKEN, RESETPASSWORDTOKEN, IP_ADDRESS)
-      VALUES
-        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER
+      (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_SALT, PASSWORD_HASH, PHONE_NUMBER, ISVERIFIED, VERIFICATIONTOKEN, RESETPASSWORDTOKEN, IP_ADDRESS, DEVICE_INFO)
+    VALUES
+      (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
 
-    const binds = [name, companyName, email, salt, hashedPassword, '123-456-7890', false, uuid.v4(), uuid.v4(), ipAddress];
+
+    const binds = [name, companyName, email, salt, hashedPassword, '123-456-7890', false, uuid.v4(), uuid.v4(), ipAddress, deviceInfo];
 
     // Execute the insert statement
     await new Promise((resolve, reject) => {

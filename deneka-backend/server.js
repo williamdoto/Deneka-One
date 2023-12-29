@@ -9,6 +9,7 @@ const signinRoute = require('./routes/signinRoute')
 const { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp } = require('./controller/signinController')
 const { companySignUp } = require('./controller/companySignupController');
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
+const useragent = require('express-useragent');
 // const corsOptions = require('./config/corsOptions');
 require('dotenv').config();
 // const axios = require('axios');
@@ -58,6 +59,7 @@ app.use(cookieParser())
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 
+app.use(useragent.express());
 
 // define Routes
 app.use('/api', signupRoute)
