@@ -297,11 +297,16 @@ const getRecentAddedUser = async (res) => {
 }
 
 const userSignUp = async (req, res) => {
+  let connection = null;
   try {
     console.log("Signing up for USER!");
 
     const { name, companyName, email, location, password } = req.body;
-    console.log(name, companyName, email, location, password);
+    const ipAddress = req.ip; // Retrieving the IP Address
+    console.log(name, companyName, email, location, password, ipAddress);
+
+    // Retrieve device information
+    const deviceInfo = req.useragent.source; // This will contain a string describing the user's device
 
     // Generate a salt and hash the password
     const salt = await bcrypt.genSalt();
@@ -309,7 +314,7 @@ const userSignUp = async (req, res) => {
     console.log("Hashed Password:", hashedPassword);
 
     // Create a new connection using the Snowflake SDK
-    const connection = snowflake.createConnection(connectionOptions);
+    connection = snowflake.createConnection(connectionOptions);
 
     // Attempt to connect to Snowflake
     await new Promise((resolve, reject) => {
@@ -324,14 +329,14 @@ const userSignUp = async (req, res) => {
 
     // Define the SQL insert statement
     const insertUser = `
-      INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER
-        (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_SALT, PASSWORD_HASH, PHONE_NUMBER, ISVERIFIED, VERIFICATIONTOKEN, RESETPASSWORDTOKEN)
-      VALUES
-        (?, ?, ?, ?, ?, ?, ?, ?, ?);
+    INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER
+      (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_SALT, PASSWORD_HASH, PHONE_NUMBER, ISVERIFIED, VERIFICATIONTOKEN, RESETPASSWORDTOKEN, IP_ADDRESS, DEVICE_INFO)
+    VALUES
+      (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
 
-    // Bind parameters to avoid SQL injection
-    const binds = [name, companyName, email, salt, hashedPassword, '123-456-7890', false, uuid.v4(), uuid.v4()];
+
+    const binds = [name, companyName, email, salt, hashedPassword, '123-456-7890', false, uuid.v4(), uuid.v4(), ipAddress, deviceInfo];
 
     // Execute the insert statement
     await new Promise((resolve, reject) => {

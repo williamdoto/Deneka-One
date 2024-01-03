@@ -1,6 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SignupPage from './views/SignUpPage/SignupPage';
+import CompanySignupPage from './views/SignUpPage/CompanySignupPage';
 import SigninPage from './views/SignInPage/SigninPage';
 import EmailInputPage from './views/SignInPage/EmailInputPage'; 
 import OtpInputPage from './views/SignInPage/OtpInputPage';
@@ -21,6 +22,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route path="/company-signup" element={<CompanySignupPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/signin" element={<SigninPage />} />
       <Route path="/emailinput" element={<EmailInputPage />} />

@@ -7,10 +7,12 @@ const path = require('path')
 const signupRoute = require('./routes/signupRoute')
 const signinRoute = require('./routes/signinRoute')
 const { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp } = require('./controller/signinController')
+const { companySignUp } = require('./controller/companySignupController');
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
+const useragent = require('express-useragent');
 // const corsOptions = require('./config/corsOptions');
 require('dotenv').config();
-const axios = require('axios');
+// const axios = require('axios');
 
 const PORT = process.env.PORT || 1337;
 
@@ -77,11 +79,12 @@ app.use(cookieParser())
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 
-
+app.use(useragent.express());
 
 // define Routes
 app.use('/api', signupRoute)
 app.use('/api', signinRoute)
+app.post('/api/company-signup', companySignUp);
 app.post('/api/setup-totp', setupTotp);
 app.post('/api/verify-totp', verifyTotp);
 
