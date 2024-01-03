@@ -3,7 +3,7 @@ import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import AddService from './AddService'; // Assuming ServiceManager is in the same directory
 import CreateCategory from './CreateCategory';
-
+import ServiceList from './ServiceList';
 const items = [
   {
     label: 'Services',
