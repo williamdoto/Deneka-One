@@ -1,6 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SignupPage from './views/SignUpPage/SignupPage';
+import Questionnaire from './views/SignUpPage/Questionnaire';
 import CompanySignupPage from './views/SignUpPage/CompanySignupPage';
 import SigninPage from './views/SignInPage/SigninPage';
 import EmailInputPage from './views/SignInPage/EmailInputPage'; 
@@ -31,8 +32,9 @@ const AppRoutes = () => {
       <Route path="/PasswordResetPage/:token" element={<PasswordResetPage />} />
       <Route path="/setup-totp" element={<SetupTOTPPage />} />
       <Route path="/totpinput" element={<TOTPInputPage />} />
-      {/* <Route path="/dashboard" element={<ProtectedRoute element={<HomePage />} />} /> */}
-      <Route path="/dashboard" element={<HomePage />} />
+      <Route path="/questionnaire" element={<Questionnaire />} />
+      <Route path="/dashboard" element={<ProtectedRoute element={<HomePage />} />} />
+      {/* <Route path="/dashboard" element={<HomePage />} /> */}
       <Route path="/services" element={<ServiceManager />} />
 
       {/* <Route path="/dashboard" element={<HomePage />} /> */}

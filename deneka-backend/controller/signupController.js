@@ -298,20 +298,25 @@ const getRecentAddedUser = async (res) => {
 
 const userSignUp = async (req, res) => {
   let connection = null;
+
   try {
     console.log("Signing up for USER!");
 
-    const { name, companyName, email, location, password } = req.body;
-    const ipAddress = req.ip; // Retrieving the IP Address
-    console.log(name, companyName, email, location, password, ipAddress);
+    const { name, companyName, email, location, password, description, industry, currentWork, teamSize, companySize } = req.body;
 
-    // Retrieve device information
-    const deviceInfo = req.useragent.source; // This will contain a string describing the user's device
+    console.log("Received data:", req.body);
+
+    // Validation: Ensure all required fields are provided
+    if (!name || !companyName || !email || !location || !password || !description || !industry || !currentWork || !teamSize || !companySize) {
+      return res.status(400).json({ message: "Missing required fields." });
+    }
+
+    const ipAddress = req.ip;
+    const deviceInfo = req.useragent.source;
 
     // Generate a salt and hash the password
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
-    console.log("Hashed Password:", hashedPassword);
 
     // Create a new connection using the Snowflake SDK
     connection = snowflake.createConnection(connectionOptions);
@@ -329,14 +334,13 @@ const userSignUp = async (req, res) => {
 
     // Define the SQL insert statement
     const insertUser = `
-    INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER
-      (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_SALT, PASSWORD_HASH, PHONE_NUMBER, ISVERIFIED, VERIFICATIONTOKEN, RESETPASSWORDTOKEN, IP_ADDRESS, DEVICE_INFO)
-    VALUES
-      (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER
+        (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_SALT, PASSWORD_HASH, PHONE_NUMBER, ISVERIFIED, VERIFICATIONTOKEN, RESETPASSWORDTOKEN, IP_ADDRESS, DEVICE_INFO, DESCRIPTION, INDUSTRY, CURRENT_WORK, TEAM_SIZE, COMPANY_SIZE)
+      VALUES
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
 
-
-    const binds = [name, companyName, email, salt, hashedPassword, '123-456-7890', false, uuid.v4(), uuid.v4(), ipAddress, deviceInfo];
+    const binds = [name, companyName, email, salt, hashedPassword, '123-456-7890', false, uuid.v4(), uuid.v4(), ipAddress, deviceInfo, description, industry, currentWork, teamSize, companySize];
 
     // Execute the insert statement
     await new Promise((resolve, reject) => {
@@ -370,8 +374,57 @@ const userSignUp = async (req, res) => {
   }
 };
 
+const updateUserDetails = async (req, res) => {
+  let connection = null;
+  try {
+    const { userId, description, industry, currentWork, teamSize, companySize } = req.body;
+    connection = snowflake.createConnection(connectionOptions);
+    await connection.connect();
+
+    const updateDetails = `UPDATE DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER 
+                           SET DESCRIPTION = ?, INDUSTRY = ?, CURRENT_WORK = ?, TEAM_SIZE = ?, COMPANY_SIZE = ? 
+                           WHERE ID = ?;`;
+    await connection.execute({
+      sqlText: updateDetails,
+      binds: [description, industry, currentWork, teamSize, companySize, userId],
+    });
+
+    res.json({ message: "User details updated successfully" });
+  } catch (error) {
+    console.error('Error updating user details:', error);
+    res.status(500).json({ message: "Error updating user details." });
+  } finally {
+    if (connection) {
+      connection.destroy();
+    }
+  }
+};
+
+const submitQuestionnaireAnswers = async (req, res) => {
+  let connection = null;
+  try {
+    const { userId, description, industry, currentWork, teamSize, companySize } = req.body;
+
+    // Log the received data
+    console.log("Received data:", req.body);
+
+    // Check for undefined values
+    if (!userId || !description || !industry || !currentWork || !teamSize || !companySize) {
+      throw new Error("One or more required fields are missing or undefined");
+    }
+
+    
+  } catch (error) {
+    console.error('Error updating questionnaire answers:', error);
+    res.status(500).json({ message: "Error updating questionnaire answers." });
+  } finally {
+    if (connection) {
+      connection.destroy();
+    }
+  }
+};
 
 
 
 
-module.exports = { userSignUp, verify, sendCode, getRecentAddedUser };
+module.exports = { userSignUp, verify, sendCode, getRecentAddedUser, updateUserDetails, submitQuestionnaireAnswers };

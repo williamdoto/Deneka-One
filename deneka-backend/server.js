@@ -6,6 +6,7 @@ const cors = require('cors')
 const path = require('path')
 const signupRoute = require('./routes/signupRoute')
 const signinRoute = require('./routes/signinRoute')
+const { updateUserDetails, submitQuestionnaireAnswers } = require('./controller/signupController');
 const { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp } = require('./controller/signinController')
 const { companySignUp } = require('./controller/companySignupController');
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
@@ -67,6 +68,9 @@ app.use('/api', signinRoute)
 app.post('/api/company-signup', companySignUp);
 app.post('/api/setup-totp', setupTotp);
 app.post('/api/verify-totp', verifyTotp);
+app.post('/api/update-user-details', updateUserDetails);
+app.post('/api/submit-questionnaire-answers', submitQuestionnaireAnswers);
+
 
 
 // Password reset routes
