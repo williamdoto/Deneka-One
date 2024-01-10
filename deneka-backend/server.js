@@ -24,28 +24,48 @@ const corsOptions = {
 
 
 
-// async function getAccessToken() {
-//   try {
-//     const response = await axios.post('https://login.microsoftonline.com/common/oauth2/v2.0/token', new URLSearchParams({
-//       client_id: process.env.CLIENT_ID,
-//       scope: 'https://graph.microsoft.com/.default',
-//       client_secret: process.env.CLIENT_SECRET,
-//       grant_type: 'client_credentials'
-//     }), {
-//       headers: {
-//         'Content-Type': 'application/x-www-form-urlencoded'
-//       }
-//     });
 
-//     console.log("Access Token: ", response.data.access_token);
-//     return response.data.access_token;
-//   } catch (error) {
-//     console.error("Error getting access token: ", error);
-//   }
-// }
 
-// // Call the function to get the token
-// getAccessToken();
+app.get('/auth/onedrive', (req, res) => {
+  const clientId = process.env.CLIENT_ID;
+  const redirectUri = encodeURIComponent('http://localhost:1337/auth/onedrive/callback');
+  const scope = encodeURIComponent('Files.ReadWrite offline_access');
+  const authUrl = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}&response_mode=query`;
+
+  res.redirect(authUrl);
+});
+
+
+app.get('/auth/onedrive/callback', async (req, res) => {
+  const code = req.query.code;
+  if (!code) {
+      return res.status(400).send('No code received from Microsoft');
+  }
+
+  try {
+      const response = await axios.post('https://login.microsoftonline.com/common/oauth2/v2.0/token', new URLSearchParams({
+          client_id: process.env.CLIENT_ID,
+          scope: 'https://graph.microsoft.com/.default',
+          client_secret: process.env.CLIENT_SECRET,
+          grant_type: 'authorization_code',
+          code: code,
+          redirect_uri: 'http://localhost:1337/auth/onedrive/callback'
+      }), {
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+          }
+      });
+
+      const accessToken = response.data.access_token;
+      // Store access token in a secure place (session, database, etc.)
+      // And redirect user or send a response as needed
+      res.send('OneDrive access granted');
+  } catch (error) {
+      console.error("Error exchanging code for token: ", error);
+      res.status(500).send('Error during OneDrive authentication');
+  }
+});
+
 
 
 app.use(cors(corsOptions));
