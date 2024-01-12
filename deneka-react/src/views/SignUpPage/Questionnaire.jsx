@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
+import { Button, message } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { API } from '../../constant';
+import { API } from '../../constant'; // Ensure consistency in API import
+import { setToken } from '../../helpers'; // If needed for authentication
 import DescriptionQuestionPage from './DescriptionQuestionPage';
 import IndustryQuestionPage from './IndustryQuestionPage';
 import CurrentWorkQuestionPage from './CurrentWorkQuestionPage';
 import TeamSizeQuestionPage from './TeamSizeQuestionPage';
 import CompanySizeQuestionPage from './CompanySizeQuestionPage';
+import './QuestionPage.css'; // Assuming a similar CSS file
 
 // Replace with your actual API URL
 // This should be the base URL of your backend server
@@ -117,28 +120,30 @@ const Questionnaire = ({ userId }) => {
   const renderQuestion = () => {
     switch (currentStep) {
       case 1:
-        return <DescriptionQuestionPage onAnswer={handleAnswer} />;
+        return <DescriptionQuestionPage onAnswer={handleAnswer} onSkip={handleSkip} onBack={handleBack} />;
       case 2:
-        return <IndustryQuestionPage onAnswer={handleAnswer} />;
+        return <IndustryQuestionPage onAnswer={handleAnswer} onSkip={handleSkip} onBack={handleBack} />;
       case 3:
-        return <CurrentWorkQuestionPage onAnswer={handleAnswer} />;
+        return <CurrentWorkQuestionPage onAnswer={handleAnswer} onSkip={handleSkip} onBack={handleBack} />;
       case 4:
-        return <TeamSizeQuestionPage onAnswer={handleAnswer} />;
+        return <TeamSizeQuestionPage onAnswer={handleAnswer}  onSkip={handleSkip} onBack={handleBack}/>;
       case 5:
-        return <CompanySizeQuestionPage onAnswer={handleAnswer} />;
+        return <CompanySizeQuestionPage onAnswer={handleAnswer}  onSkip={handleSkip} onBack={handleBack} onConfirm={submitAllData}/>;
       default:
         return <div>Thank you for completing the questionnaire!</div>;
     }
   };
 
   return (
-    <div>
-      {renderQuestion()}
-      {currentStep > 1 && <button onClick={handleBack}>Back</button>}
-      {currentStep < TOTAL_STEPS && <button onClick={handleSkip}>Skip</button>}
-      {currentStep === TOTAL_STEPS && <button onClick={submitAllData}>Confirm</button>}
+    <div className="questionnaire-container">
+        {renderQuestion()}
+        <div className="navigation-buttons">
+            {currentStep > 1 && <Button onClick={handleBack}>Back</Button>}
+            {currentStep < TOTAL_STEPS && <Button onClick={handleSkip}>Skip</Button>}
+            {currentStep === TOTAL_STEPS && <Button type="primary" onClick={submitAllData}>Confirm</Button>}
+        </div>
     </div>
-  );
+);
 };
 
 export default Questionnaire;
