@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {FloatButton, ConfigProvider, Layout, theme } from "antd";
+import { useDispatch, useSelector } from 'react-redux';
+import { checkAuth } from './redux/slices/authSlice'; // Import the action
 import SidebarMenu from "./components/Sidebar/Sidebar";
 import AppRoutes from "./AppRoutes";
 import TopBar from "./components/TopBar/TopBar";
@@ -13,7 +15,9 @@ const { Header, Content, Sider } = Layout;
 const { defaultAlgorithm, darkAlgorithm } = theme;
 
 function App() {
-  const { setUser } = useAuthContext();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
   const [collapsed, setCollapsed] = useState(false);
   const [isSidebarRight, setIsSidebarRight] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -21,22 +25,15 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
-    const token = localStorage.getItem('jwtToken');
-    if (token) {
-      // If a JWT token exists in local storage, set the user as authenticated
-      setUser({ isAuthenticated: true });
-    }
-  }, []);
+    dispatch(checkAuth()); // Check authentication status on component mount
+  }, [dispatch]);
 
   const [drawerWidth, setDrawerWidth] = useState(0); // Define drawerWidth and setDrawerWidth
 
   const [drawerPinned, setDrawerPinned] = useState(false); // New state to track whether the drawer is pinned
-  const isAuthenticated = () => {
-    // Replace with your actual authentication check
-    return true;
-  };
+  
 
-  const shouldHideBars = location.pathname === '*' || !isAuthenticated();
+  const shouldHideBars = location.pathname === '*' || !isAuthenticated; // Directly use isAuthenticated as a boolean
 
   const handleCollapse = (isCollapsed) => {
     setCollapsed(isCollapsed);
@@ -81,7 +78,7 @@ function App() {
       }}
     >
       <Layout style={{ minHeight: "100vh", background: isDarkMode ? '#141414' : '#FFFFFF' }}>
-        {!shouldHideBars && !isSidebarRight && (
+        {isAuthenticated && !shouldHideBars && !isSidebarRight && (
           <Sider
             width={200}
             collapsed={collapsed}
@@ -98,7 +95,7 @@ function App() {
           </Sider>
         )}
         <Layout>
-          {!shouldHideBars && (
+          {isAuthenticated && !shouldHideBars && (
             <Header style={{ padding: 0, height: 'auto', lineHeight: 'normal', background: isDarkMode ? 'linear-gradient(60deg, #29323c 0%, #485563 100%)' : '#FFFFFF' }}>
               <TopBar isDarkMode={isDarkMode} toggleDarkMode={handleToggleDarkMode} toggleNotificationBar={toggleNotificationBar} />
             </Header>)}
@@ -111,7 +108,7 @@ function App() {
   />
           </Content>
         </Layout>
-        {!shouldHideBars && isSidebarRight && (
+        {isAuthenticated && !shouldHideBars && isSidebarRight && (
           <Sider
             width={200}
             collapsed={collapsed}
@@ -126,7 +123,7 @@ function App() {
             <SidebarMenu collapsed={collapsed} setCollapsed={setCollapsed} togglePosition={toggleSidebarPosition} isSidebarRight={isSidebarRight} isDarkMode={isDarkMode} />
           </Sider>
         )}
-        {!shouldHideBars && (
+        {isAuthenticated && !shouldHideBars && (
           <NotificationBar
             visible={notificationVisible}
             onClose={toggleNotificationBar}

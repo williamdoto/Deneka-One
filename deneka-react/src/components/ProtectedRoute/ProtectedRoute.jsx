@@ -1,15 +1,11 @@
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { useAuthContext } from '../../context/AuthContext';
 
-const ProtectedRoute = ({ element, ...rest }) => {
-  const { user } = useAuthContext();
+const ProtectedRoute = ({ element: Component, ...rest }) => {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  // If user isn't authenticated, navigate to the signin page.
-  if (!user.isAuthenticated) {
-    return <Navigate to="/signin" />;
-  }
+  return isAuthenticated ? <Component {...rest} /> : <Navigate to="/signin" />;
+};
 
-  // If authenticated, render the specified component.
-  return element;
-}
 export default ProtectedRoute;
