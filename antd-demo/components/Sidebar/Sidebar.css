@@ -1,0 +1,45 @@
+/* Targeting the Sider component for transition */
+.ant-layout-sider {
+  transition: width 0.3s;
+  background-color: #ffff; /* Light gray, a bit darker than top bar */
+}
+
+/* Styling for the Menu items */
+.ant-menu-item {
+  color: #333; /* Dark text for contrast on light background */
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  transition: background-color 0.5s ease;
+}
+
+/* Icon styling - Adjust based on your need */
+.ant-menu-item .anticon {
+  margin-right: 10px;
+  font-size: 55px; /* Adjust icon size for better visual alignment */
+}
+
+/* Styling for the Menu item text */
+.ant-menu-item > span {
+  flex-grow: 1;
+  white-space: nowrap;
+  font-weight: 500; /* Slightly bolder font for clarity */
+}
+
+/* ...existing styles... */
+
+/* Add conditional styles for dark mode here, if necessary */
+/* For example: */
+
+.dark-mode .ant-menu-item {
+  color: white;
+  background-color: #141414;
+}
+
+/* You might need to add more styles based on your design */
+
+
+.switch-dark {
+  /* Styles for the dark mode switch, adjust as necessary */
+  background-color: #141414;
+}
