@@ -10,6 +10,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import './SignupPage.css';
 import logo from '../../assets/media/Deneka-One.png';
 
+
 const { Option } = Select;
 
 const SignupPage = () => {
@@ -19,6 +20,7 @@ const SignupPage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [registrationData, setRegistrationData] = useState({});
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -30,46 +32,56 @@ const SignupPage = () => {
     };
   }, []);
 
-  const onFinish = async (values) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${API}/signup/user`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-        credentials: 'include',
-      });
   
-      const data = await response.json();
-      if (!response.ok || data?.error) {
-        throw new Error(data?.message || 'Failed to sign up');
-      }
 
-      const emailResponse = await fetch(`${API}/send-verification-email`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: values.email }),
-      });
-
-      if (!emailResponse.ok) {
-        const emailErrorData = await emailResponse.json();
-        throw new Error(emailErrorData.message || 'Failed to send verification email');
-      }
-
-      setToken(data.jwt);
-      setUser(data.user);
-      message.success(`Welcome to Social Cards ${data.user.username}! Check your email for verification.`);
-      navigate('/profile', { replace: true });
-    } catch (error) {
-      console.error(error);
-      setError(error?.message ?? 'Something went wrong!');
-      setIsLoading(false);
-    }
+  const onFinish = (values) => {
+    // Store registration data
+    setRegistrationData(values);
+    // Navigate to Questionnaire
+    navigate('/questionnaire', { state: { registrationData: values } });
   };
+
+  // const onFinish = async (values) => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch(`${API}/signup/user`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(values),
+  //       credentials: 'include',
+  //     });
+  
+  //     const data = await response.json();
+  //     if (!response.ok || data?.error) {
+  //       throw new Error(data?.message || 'Failed to sign up');
+  //     }
+
+  //     // const emailResponse = await fetch(`${API}/send-verification-email`, {
+  //     //   method: 'POST',
+  //     //   headers: {
+  //     //     'Content-Type': 'application/json',
+  //     //   },
+  //     //   body: JSON.stringify({ email: values.email }),
+  //     // });
+
+  //     // if (!emailResponse.ok) {
+  //     //   const emailErrorData = await emailResponse.json();
+  //     //   throw new Error(emailErrorData.message || 'Failed to send verification email');
+  //     // }
+
+  //     setToken(data.jwt);
+  //     setUser(data.user);
+  //     // message.success(`Welcome to Social Cards ${data.user.username}! Check your email for verification.`);
+  //     // navigate('/profile', { replace: true });
+  //     navigate('/questionnaire', { replace: true });
+  //   } catch (error) {
+  //     console.error(error);
+  //     setError(error?.message ?? 'Something went wrong!');
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
     <div className="card-container">
