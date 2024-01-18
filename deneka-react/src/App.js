@@ -1,51 +1,28 @@
-import React, { useState, useEffect } from "react";
-import {FloatButton, ConfigProvider, Layout, theme } from "antd";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { checkAuth } from './redux/slices/authSlice'; // Import the action
+import { checkAuth } from './redux/slices/authSlice';
+import { toggleCollapsed, toggleSidebarPosition, toggleDarkMode, toggleNotificationVisible } from './redux/slices/uiSlice';
+import { ConfigProvider, Layout, theme } from "antd";
 import SidebarMenu from "./components/Sidebar/Sidebar";
 import AppRoutes from "./AppRoutes";
 import TopBar from "./components/TopBar/TopBar";
-import { AuthProvider, useAuthContext } from './context/AuthContext';
 import NotificationBar from "./components/NotificationBar/NotificationBar";
-import FeedbackButton from "./components/FloatButton/FeedbackButton";
 import { useLocation } from 'react-router-dom';
-
 
 const { Header, Content, Sider } = Layout;
 const { defaultAlgorithm, darkAlgorithm } = theme;
 
 function App() {
   const dispatch = useDispatch();
+  const { collapsed, isSidebarRight, isDarkMode, notificationVisible } = useSelector((state) => state.ui);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-  const [collapsed, setCollapsed] = useState(false);
-  const [isSidebarRight, setIsSidebarRight] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [notificationVisible, setNotificationVisible] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    dispatch(checkAuth()); // Check authentication status on component mount
+    dispatch(checkAuth());
   }, [dispatch]);
 
-  const [drawerWidth, setDrawerWidth] = useState(0); // Define drawerWidth and setDrawerWidth
-
-  const [drawerPinned, setDrawerPinned] = useState(false); // New state to track whether the drawer is pinned
-  
-
-  const shouldHideBars = location.pathname === '*' || !isAuthenticated; // Directly use isAuthenticated as a boolean
-
-  const handleCollapse = (isCollapsed) => {
-    setCollapsed(isCollapsed);
-  };
-
-  const toggleNotificationBar = () => {
-    setNotificationVisible(!notificationVisible);
-  };
-
-  const handleToggleDarkMode = () => {
-    setIsDarkMode((previousValue) => !previousValue);
-  };
+  const shouldHideBars = location.pathname === '*' || !isAuthenticated;
 
   const togglerStyle = {
     backgroundColor: isDarkMode ? '#29323c' : '#FFFFFF',
@@ -58,32 +35,20 @@ function App() {
     return {
       background: isDarkMode ? '#141414' : '#FFFFFF',
       position: 'relative',
-      marginRight: notificationVisible && drawerPinned && !isSidebarRight ? `378px` : '0px',
-      marginLeft: notificationVisible && drawerPinned && isSidebarRight ? `378px` : '0px',
+      marginRight: notificationVisible && !isSidebarRight ? `378px` : '0px',
+      marginLeft: notificationVisible && isSidebarRight ? `378px` : '0px',
     };
-  };
-  
-
-  const toggleSidebarPosition = () => {
-    setIsSidebarRight(!isSidebarRight);
-    setCollapsed(true);
   };
 
   return (
-    <AuthProvider>
-    <ConfigProvider
-      theme={{
-        algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm,
-        components: { TopBar: { colorPrimary: isDarkMode ? '#29323c' : '#FFFFFF' } }
-      }}
-    >
+    <ConfigProvider theme={{ algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm }}>
       <Layout style={{ minHeight: "100vh", background: isDarkMode ? '#141414' : '#FFFFFF' }}>
         {isAuthenticated && !shouldHideBars && !isSidebarRight && (
           <Sider
             width={200}
             collapsed={collapsed}
             collapsible
-            onCollapse={handleCollapse}
+            onCollapse={() => dispatch(toggleCollapsed())}
             trigger={<div style={togglerStyle}>&#9776;</div>}
             style={{
               background: isDarkMode ? 'linear-gradient(60deg, #29323c 0%, #485563 100%)' : 'linear-gradient(60deg, #ffffff 0%, #f0f0f0 100%)',
@@ -91,21 +56,18 @@ function App() {
               color: isDarkMode ? 'white' : 'black'
             }}
           >
-            <SidebarMenu collapsed={collapsed} setCollapsed={setCollapsed} togglePosition={toggleSidebarPosition} isSidebarRight={isSidebarRight} isDarkMode={isDarkMode} />
+            <SidebarMenu />
           </Sider>
         )}
         <Layout>
           {isAuthenticated && !shouldHideBars && (
             <Header style={{ padding: 0, height: 'auto', lineHeight: 'normal', background: isDarkMode ? 'linear-gradient(60deg, #29323c 0%, #485563 100%)' : '#FFFFFF' }}>
-              <TopBar isDarkMode={isDarkMode} toggleDarkMode={handleToggleDarkMode} toggleNotificationBar={toggleNotificationBar} />
-            </Header>)}
+              <TopBar />
+            </Header>
+          )}
           <Content style={computeContentStyle()}>
             <AppRoutes />
-            <FeedbackButton 
-    shouldHideBars={shouldHideBars} 
-    isDarkMode={isDarkMode} 
-    isSidebarRight={isSidebarRight} 
-  />
+            {/* Other components */}
           </Content>
         </Layout>
         {isAuthenticated && !shouldHideBars && isSidebarRight && (
@@ -113,29 +75,26 @@ function App() {
             width={200}
             collapsed={collapsed}
             collapsible
-            onCollapse={handleCollapse}
+            onCollapse={() => dispatch(toggleCollapsed())}
             trigger={<div style={togglerStyle}>&#9776;</div>}
             style={{
               background: isDarkMode ? 'linear-gradient(60deg, #29323c 0%, #485563 100%)' : '#FFFFFF',
               borderLeft: "1px solid #E0E0E0",
             }}
           >
-            <SidebarMenu collapsed={collapsed} setCollapsed={setCollapsed} togglePosition={toggleSidebarPosition} isSidebarRight={isSidebarRight} isDarkMode={isDarkMode} />
+            <SidebarMenu />
           </Sider>
         )}
         {isAuthenticated && !shouldHideBars && (
           <NotificationBar
             visible={notificationVisible}
-            onClose={toggleNotificationBar}
+            onClose={() => dispatch(toggleNotificationVisible())}
             placement={!isSidebarRight ? "right" : "left"}
-            setDrawerWidth={setDrawerWidth} // Pass the setter function
-      onPin={setDrawerPinned} // Pass the setter function for drawerPinned
-          />)}
+          />
+        )}
       </Layout>
     </ConfigProvider>
-    </AuthProvider>
   );
-
 }
 
 export default App;

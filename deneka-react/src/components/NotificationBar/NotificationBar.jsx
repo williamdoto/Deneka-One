@@ -1,15 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  Drawer,
-  Card,
-  Button,
-  List,
-  Avatar,
-  Timeline,
-  Typography
-} from "antd";
-
-import Paragraph from "antd/lib/typography/Paragraph";
+import { Drawer, Card, Button, List, Avatar, Timeline, Typography } from "antd";
+import { PushpinOutlined, PushpinFilled } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleNotificationBarPinned } from '../../redux/slices/uiSlice';
 
 import {
   PushpinOutlined,
