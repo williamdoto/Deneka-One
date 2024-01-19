@@ -4,9 +4,23 @@ import './TopBar.css';
 import { UserOutlined, BellOutlined, BulbOutlined, SearchOutlined } from '@ant-design/icons';
 import { Dropdown, Input } from 'antd';
 import logo from '../../assets/media/Deneka-One.png'; // Importing the logo
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleDarkMode, toggleNotificationVisible } from '../../redux/slices/uiSlice';
 
-const  TopBar = ({ isDarkMode, toggleDarkMode, toggleNotificationBar }) => {
-  const [searchInput, setSearchInput] = useState('');
+const TopBar = () => {
+  const dispatch = useDispatch();
+  const { isDarkMode } = useSelector((state) => state.ui);
+  const [searchInput, setSearchInput] = useState(''); // Define the searchInput state and its setter
+
+  const handleToggleDarkMode = () => {
+    dispatch(toggleDarkMode());
+  };
+
+  const toggleNotificationBar = () => {
+    dispatch(toggleNotificationVisible());
+  };
+}
+
   const navigate = useNavigate();
 
   const handleSearchInputChange = (e) => {
@@ -18,6 +32,7 @@ const  TopBar = ({ isDarkMode, toggleDarkMode, toggleNotificationBar }) => {
     console.log('Search:', searchInput);
     // Implement search functionality here
   };
+
 
   const handleLogout = async () => {
     const userId = localStorage.getItem('userId'); // Retrieve user ID from local storage
@@ -45,10 +60,18 @@ const  TopBar = ({ isDarkMode, toggleDarkMode, toggleNotificationBar }) => {
       // Handle case where userId is not found in local storage
       console.error('No user ID found in local storage.');
     }
+
+  const handleLogout = () => {
+    // Clear the JWT token
+    localStorage.removeItem('jwtToken');
+    // Redirect to the login page
+    navigate('/signin');
+
   };
   
   
   
+
 
   const items = [
     {
@@ -94,7 +117,7 @@ const  TopBar = ({ isDarkMode, toggleDarkMode, toggleNotificationBar }) => {
       <div className="icon-group">
         <button 
             className={`icon-button power-btn ${isDarkMode ? 'icon-button-dark' : ''}`} 
-            onClick={toggleDarkMode}
+            onClick={handleToggleDarkMode}
         >
           <BulbOutlined style={{ color: isDarkMode ? 'yellow' : 'gray' }} />
         </button>
@@ -114,6 +137,6 @@ const  TopBar = ({ isDarkMode, toggleDarkMode, toggleNotificationBar }) => {
       </div>
     </div>
   );
-}
+};
 
 export default TopBar;
