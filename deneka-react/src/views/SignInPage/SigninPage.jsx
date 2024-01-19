@@ -63,11 +63,8 @@ const handleSubmit = async (values) => {
       const response = await axios.post('http://localhost:1337/api/signin', values);
   
       if (response.data && response.data.success) {
-        // Save the token and update the Redux state
         setToken(response.data.token);
-        dispatch(login({ user: response.data.user })); // Dispatch the login action with user data
-
-        // Redirect to the dashboard or next step
+        dispatch(login({ user: response.data.user }));
         navigate('/totpinput', { state: { email: values.email } });
       } else {
         // Handle login error

@@ -23,12 +23,13 @@ import { useSelector } from 'react-redux';
 
 const AppRoutes = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
+  const totpRequired = useSelector((state) => state.auth.totpRequired); // Add this line
   return (
     <Routes>
       {/* Protected routes */}
-      <Route path="/dashboard" element={isAuthenticated ? <HomePage /> : <Navigate to="/signin" />} />
-      <Route path="/services" element={isAuthenticated ? <ServiceManager /> : <Navigate to="/signin" />} />
+      <Route path="/dashboard" element={isAuthenticated ? <HomePage /> : <Navigate to={totpRequired ? "/totpinput" : "/signin"} />} />
+      <Route path="/services" element={isAuthenticated ? <ServiceManager /> : <Navigate to={totpRequired ? "/totpinput" : "/signin"} />} />
+      
 
       {/* Public routes */}
       <Route path="/signup" element={!isAuthenticated ? <SignupPage /> : <Navigate to="/dashboard" />} />

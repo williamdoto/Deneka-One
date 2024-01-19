@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   isAuthenticated: false,
+  totpRequired: false, // New state to track if TOTP input is required
   user: null,
 };
 
@@ -10,11 +11,16 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      state.isAuthenticated = true;
+      state.totpRequired = true; // Set TOTP as required upon login
       state.user = action.payload;
+    },
+    completeTOTP: (state) => {
+      state.isAuthenticated = true; // Set isAuthenticated to true after TOTP is completed
+      state.totpRequired = false;
     },
     logout: (state) => {
       state.isAuthenticated = false;
+      state.totpRequired = false;
       state.user = null;
     },
     checkAuth: (state) => {
@@ -26,5 +32,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { login, logout, checkAuth } = authSlice.actions;
+export const { login, completeTOTP, logout, checkAuth } = authSlice.actions;
 export default authSlice.reducer;

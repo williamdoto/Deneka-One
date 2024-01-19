@@ -2,8 +2,12 @@ import React from 'react';
 import { Card, Form, Input, Button } from 'antd';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux'; // Import useDispatch
+import { completeTOTP } from '../../redux/slices/authSlice'; // Import the completeTOTP action
+
 
 const TOTPInputPage = () => {
+  const dispatch = useDispatch(); // Initialize dispatch
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const location = useLocation();
@@ -16,17 +20,15 @@ const TOTPInputPage = () => {
 
     // Call your backend to verify the TOTP token
     axios.post('http://localhost:1337/api/verify-totp', { email: userEmail, totpToken: values.totpToken })
-      .then(response => {
-        console.log('Response from server:', response); // Debugging line
-        if (response.data && response.data.success) {
-          // Redirect to the dashboard or next page
-          navigate('/dashboard');
-        }
-      })
-      .catch(error => {
-        // Handle error (e.g., invalid TOTP token)
-        console.error('Error:', error.response ? error.response.data : error.message);
-      });
+    .then(response => {
+      if (response.data && response.data.success) {
+        dispatch(completeTOTP()); // Complete the authentication process
+        navigate('/dashboard');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error.response ? error.response.data : error.message);
+    });
   };
 
   return (
