@@ -19,13 +19,36 @@ const  TopBar = ({ isDarkMode, toggleDarkMode, toggleNotificationBar }) => {
     // Implement search functionality here
   };
 
-  const handleLogout = () => {
-    // Clear the JWT token
-    localStorage.removeItem('jwtToken'); // or clear cookies if you're using cookies
-
-    // Redirect to the login page
-    navigate('/signin');
+  const handleLogout = async () => {
+    const userId = localStorage.getItem('userId'); // Retrieve user ID from local storage
+  
+    if (userId) {
+      try {
+        // Make an API call to record the sign-out time
+        await fetch('/api/sign-out', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ userId })
+        });
+  
+        // Clear the local storage
+        localStorage.removeItem('userId');
+        localStorage.removeItem('jwtToken');
+        navigate('/signin');
+      } catch (error) {
+        console.error('Error during sign out:', error);
+        // Handle error appropriately
+      }
+    } else {
+      // Handle case where userId is not found in local storage
+      console.error('No user ID found in local storage.');
+    }
   };
+  
+  
+  
 
   const items = [
     {
