@@ -13,6 +13,7 @@ import { useAuthContext } from '../../context/AuthContext';
 
 const SigninPage = () => {
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
   const [currentImage, setCurrentImage] = useState(videoSrc);
 
   useEffect(() => {
@@ -55,26 +56,22 @@ const handlePwdEmailInputRedirect = () => {
 // ... inside your SigninPage component:
 const navigate = useNavigate();
 const { setUser } = useAuthContext(); // Destructure setUser from the context
-
 const handleSubmit = async (values) => {
     try {
       const response = await axios.post('http://localhost:1337/api/signin', values);
   
       if (response.data && response.data.success) {
-        // Save the token using the helper function you've already set up
-        setToken(response.data.token); // Remove the quotes around response.data.token
-  
-        // If you're passing user data, update the context
-        // setUser(response.data.user); // Uncomment if you're passing user data
-        setUser({ isAuthenticated: true });
-        // Redirect to the dashboard
+        // Save the token and update the Redux state
+        setToken(response.data.token);
+        dispatch(login({ user: response.data.user })); // Dispatch the login action with user data
+
+        // Redirect to the dashboard or next step
         navigate('/totpinput', { state: { email: values.email } });
       } else {
-        // Display an error message to the user
+        // Handle login error
         console.log('Error signing in:', response.data.error);
       }
     } catch (error) {
-      // Display an error message to the user
       console.error('Sign in error:', error.response ? error.response.data.error : error.message);
     }
   };
