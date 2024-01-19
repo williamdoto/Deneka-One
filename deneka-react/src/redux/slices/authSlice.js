@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  isAuthenticated: true,
+  isAuthenticated: false,
   user: null,
 };
 
@@ -19,7 +19,7 @@ export const authSlice = createSlice({
     },
     checkAuth: (state) => {
       const token = localStorage.getItem('jwtToken');
-      // state.isAuthenticated = true;
+      state.isAuthenticated = true;
       state.isAuthenticated = !!token;
       // set user details if needed
     },

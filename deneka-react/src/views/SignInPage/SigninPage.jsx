@@ -8,6 +8,8 @@ import './SigninPage.css';
 import { useNavigate } from 'react-router-dom';
 import { setToken } from '../../helpers'; // Make sure the path is correct
 import { useAuthContext } from '../../context/AuthContext';
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/slices/authSlice'; // Update the path as needed
 
 
 
