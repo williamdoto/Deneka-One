@@ -14,13 +14,13 @@ export const authSlice = createSlice({
       state.user = action.payload;
     },
     logout: (state) => {
-      state.isAuthenticated = true;
+      state.isAuthenticated = false;
       state.user = null;
     },
     checkAuth: (state) => {
       const token = localStorage.getItem('jwtToken');
-      state.isAuthenticated = true;
-      // state.isAuthenticated = !!token;
+      // state.isAuthenticated = true;
+      state.isAuthenticated = !!token;
       // set user details if needed
     },
   },

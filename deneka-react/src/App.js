@@ -14,7 +14,7 @@ const { defaultAlgorithm, darkAlgorithm } = theme;
 
 function App() {
   const dispatch = useDispatch();
-  const { collapsed, isSidebarRight, isDarkMode, notificationVisible } = useSelector((state) => state.ui);
+  const { collapsed, isSidebarRight, isDarkMode, notificationVisible, notificationBarPinned } = useSelector((state) => state.ui);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const location = useLocation();
 
@@ -35,8 +35,8 @@ function App() {
     return {
       background: isDarkMode ? '#141414' : '#FFFFFF',
       position: 'relative',
-      marginRight: notificationVisible && !isSidebarRight ? `378px` : '0px',
-      marginLeft: notificationVisible && isSidebarRight ? `378px` : '0px',
+      marginRight: notificationVisible && notificationBarPinned && !isSidebarRight ? `378px` : '0px',
+      marginLeft: notificationVisible && notificationBarPinned && isSidebarRight ? `378px` : '0px',
     };
   };
 
