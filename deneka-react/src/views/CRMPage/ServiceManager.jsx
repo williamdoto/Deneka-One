@@ -4,6 +4,7 @@ import { Menu } from 'antd';
 import AddService from './AddService'; // Assuming ServiceManager is in the same directory
 import CreateCategory from './CreateCategory';
 import ServiceList from './ServiceList';
+import CategoryList from './CategoryList';
 const items = [
   {
     label: 'Services',
@@ -53,10 +54,10 @@ const ServiceManager = () => {
         return <CreateCategory/>
       case 'manage-services':
         // return <ManageServicesComponent />;
-        return <p>Manage Services</p>;
+        return <ServiceList/>;
       case 'manage-categories':
         // return <ManageCategoriesComponent />;
-        return <p>Manage Categories</p>;
+        return <CategoryList/>;
       default:
         return null;
     }

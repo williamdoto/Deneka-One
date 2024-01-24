@@ -16,6 +16,13 @@
   overflow: hidden; /* Prevent image overflow */
 }
 
+.signin-background {
+  background: url('./giphy.gif') no-repeat center center fixed;
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+}
+
 .card-content {
   display: flex;
   flex-wrap: nowrap;

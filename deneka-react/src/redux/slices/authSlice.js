@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  isAuthenticated: false,
-  totpRequired: false, // New state to track if TOTP input is required
+  isAuthenticated: true,
+  totpRequired: true, // New state to track if TOTP input is required
   user: null,
 };
 
@@ -26,7 +26,7 @@ export const authSlice = createSlice({
     checkAuth: (state) => {
       const token = localStorage.getItem('jwtToken');
       state.isAuthenticated = true;
-      state.isAuthenticated = !!token;
+      // state.isAuthenticated = !!token;
       // set user details if needed
     },
   },

@@ -5,7 +5,7 @@ import { Dropdown, Input } from 'antd';
 import logo from '../../assets/media/Deneka-One.png'; // Importing the logo
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleDarkMode, toggleNotificationVisible } from '../../redux/slices/uiSlice';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const TopBar = () => {
   const dispatch = useDispatch();
@@ -51,8 +51,10 @@ const TopBar = () => {
 
   return (
     <div className={`topbar ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
-      <img src={logo} alt="Deneka One Logo" className="topbar-logo" />
-      <h5>Deneka One</h5>
+      <Link to="/dashboard"><img src={logo} alt="Deneka One Logo" className="topbar-logo" /></Link>
+      <Link to="/dashboard" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <h5>Deneka One</h5>
+      </Link>
       <div className="search-bar">
         <Input 
           placeholder="Search..." 
