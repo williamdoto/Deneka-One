@@ -50,28 +50,36 @@
 // };
 
 // export default ServiceList;
-
-
-import React from 'react';
-import { Table, Tag, Space } from 'antd';
+import React, { useState } from 'react';
+import { UnorderedListOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { Table, Tag, Card, Col, Row, Radio, Pagination } from 'antd';
 import './ServiceList.css'; // Import the CSS file for custom styles 
+const { Meta } = Card; // Add this line to import Meta
 
 const ServiceList = () => {
+  const [viewType, setViewType] = useState('table'); // Default to table view
+
+  const handleViewChange = (e) => {
+    setViewType(e.target.value);
+  };
+
   // Sample static data for offline testing
   const services = [
     {
       id: 1,
       name: 'Web Development',
-      description: 'Full stack web development services',
+      description: 'Full stack web development services with a focus on modern technologies and best practices.',
       price: '1000',
       categories: [{ name: 'Development' }, { name: 'Web' }],
+      imageUrl: 'https://via.placeholder.com/150', // Placeholder image URL
     },
     {
       id: 2,
       name: 'Graphic Design',
-      description: 'Creative graphic design services',
+      description: 'Creative graphic design services for branding, marketing materials, and digital assets.',
       price: '500',
       categories: [{ name: 'Design' }, { name: 'Graphics' }],
+      imageUrl: 'https://via.placeholder.com/150', // Placeholder image URL
     },
     // Add more sample services as needed
   ];
@@ -109,20 +117,78 @@ const ServiceList = () => {
       ),
     },
     // Optional: Add more columns as needed
-  ];
+  ];const cardView = (
+    <div>
+      <Row gutter={16}>
+        {services.map(service => (
+          <Col key={service.id} span={4}>
+            <Card
+              hoverable // Add hoverable prop for the hover effect
+              style={{ marginBottom: '16px', width: 250 }}
+              cover={<img alt={service.name} src={service.imageUrl} style={{ height: '120px', objectFit: 'cover' }} />}
+            >
+              <Meta
+                title={service.name}
+                description={
+                  <div>
+                    <p>{service.description}</p>
+                    <p>Price: {service.price}</p>
+                    <div>
+                      {service.categories.map(cat => (
+                        <Tag color="blue" key={cat.name} style={{ margin: '0px 0' }}>
+                          {cat.name.toUpperCase()}
+                        </Tag>
+                      ))}
+                    </div>
+                  </div>
+                }
+              />
+            </Card>
+          </Col>
+        ))}
+      </Row>
+      {/* Add pagination for card view */}
+      <div style={{ textAlign: 'center', marginTop: '16px' }}>
+        <Pagination defaultCurrent={1} total={50} />
+      </div>
+    </div>
+  );
+  
+  
+  
+  
+  
+  
+
+  const tableView = (
+    <Table
+      dataSource={services}
+      columns={columns}
+      rowKey="id"
+      pagination={{ pageSize: 10 }}
+      scroll={{ x: 1000 }} // Adjust the scroll width as needed for responsiveness
+    />
+  );
 
   return (
-    <div style={{ padding: '20px' }}>
-      <Table 
-        dataSource={services} 
-        columns={columns} 
-        rowKey="id" 
-        pagination={{ pageSize: 10 }} 
-        scroll={{ x: 1000 }} // Adjust the scroll width as needed for responsiveness
-      />
+    <div style={{ padding: '15px' }}>
+      <Row justify="end"style={{ marginBottom: '15px' }}>
+        <Col>
+          <Radio.Group
+            value={viewType}
+            onChange={handleViewChange}
+            buttonStyle="solid"
+          >
+            <Radio.Button value="table">Table</Radio.Button>
+            <Radio.Button value="card">Card</Radio.Button>
+          </Radio.Group>
+        </Col>
+      </Row>
+
+      {/* Render the selected view */}
+      {viewType === 'table' ? tableView : cardView}
     </div>
   );
 };
-
 
 export default ServiceList;
