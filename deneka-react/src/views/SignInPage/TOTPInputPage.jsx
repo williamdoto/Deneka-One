@@ -1,34 +1,50 @@
-import React from 'react';
-import { Card, Form, Input, Button } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Card, Form, Input, Button, message } from 'antd';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux'; // Import useDispatch
-import { completeTOTP } from '../../redux/slices/authSlice'; // Import the completeTOTP action
-
+import { useDispatch } from 'react-redux';
+import { completeTOTP } from '../../redux/slices/authSlice';
 
 const TOTPInputPage = () => {
-  const dispatch = useDispatch(); // Initialize dispatch
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const [isTotpSetupDisabled, setIsTotpSetupDisabled] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const userEmail = location.state?.email;
 
-  console.log('User email:', userEmail); // Debugging line
+
+  
+  useEffect(() => {
+    axios.post('http://localhost:1337/api/check-totp-setup', { email: userEmail })
+      .then(response => {
+        console.log("Check TOTP Setup response:", response.data); // Debugging line
+        if (response.data && response.data.isTotpSet) {
+          setIsTotpSetupDisabled(true);
+        }
+      })
+      .catch(error => {
+        message.error('Error: ' + error.message);
+      });
+  }, [userEmail]);
+  
+
 
   const handleSubmit = (values) => {
-    console.log('TOTP Token:', values.totpToken); // Debugging line
-
-    // Call your backend to verify the TOTP token
     axios.post('http://localhost:1337/api/verify-totp', { email: userEmail, totpToken: values.totpToken })
-    .then(response => {
-      if (response.data && response.data.success) {
-        dispatch(completeTOTP()); // Complete the authentication process
-        navigate('/dashboard');
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error.response ? error.response.data : error.message);
-    });
+      .then(response => {
+        if (response.data && response.data.success) {
+          dispatch(completeTOTP());
+          navigate('/dashboard');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error.response ? error.response.data : error.message);
+      });
+  };
+
+  const handleSetup = () => {
+    navigate('/setup-totp', { state: { email: userEmail } });
   };
 
   return (
@@ -43,8 +59,8 @@ const TOTPInputPage = () => {
         <Button type="primary" htmlType="submit">
           Verify
         </Button>
-        <Button onClick={() => navigate('/setup-totp', { state: { email: userEmail } })}>
-            Setup TOTP
+        <Button onClick={handleSetup} disabled={isTotpSetupDisabled}>
+          Setup TOTP
         </Button>
       </Form>
     </Card>
