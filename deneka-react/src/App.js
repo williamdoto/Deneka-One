@@ -83,6 +83,7 @@ function App() {
             }}
           >
             <SidebarMenu />
+            
           </Sider>
         )}
         {isAuthenticated && !shouldHideBars && (

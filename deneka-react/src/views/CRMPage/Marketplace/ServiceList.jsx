@@ -50,11 +50,14 @@
 // };
 
 // export default ServiceList;
+
+import CustomCard from './CustomCard';
 import React, { useState } from 'react';
 import { UnorderedListOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { Table, Tag, Card, Col, Row, Radio, Pagination } from 'antd';
 import './ServiceList.css'; // Import the CSS file for custom styles 
 const { Meta } = Card; // Add this line to import Meta
+
 
 const ServiceList = () => {
   const [viewType, setViewType] = useState('table'); // Default to table view
@@ -67,7 +70,7 @@ const ServiceList = () => {
   const services = [
     {
       id: 1,
-      name: 'Web Development',
+      title: 'Web Development',
       description: 'Full stack web development services with a focus on modern technologies and best practices.',
       price: '1000',
       categories: [{ name: 'Development' }, { name: 'Web' }],
@@ -75,7 +78,7 @@ const ServiceList = () => {
     },
     {
       id: 2,
-      name: 'Graphic Design',
+      title: 'Graphic Design',
       description: 'Creative graphic design services for branding, marketing materials, and digital assets.',
       price: '500',
       categories: [{ name: 'Design' }, { name: 'Graphics' }],
@@ -117,42 +120,22 @@ const ServiceList = () => {
       ),
     },
     // Optional: Add more columns as needed
-  ];const cardView = (
+  ];
+  const cardView = (
     <div>
       <Row gutter={16}>
         {services.map(service => (
           <Col key={service.id} span={4}>
-            <Card
-              hoverable // Add hoverable prop for the hover effect
-              style={{ marginBottom: '16px', width: 250 }}
-              cover={<img alt={service.name} src={service.imageUrl} style={{ height: '120px', objectFit: 'cover' }} />}
-            >
-              <Meta
-                title={service.name}
-                description={
-                  <div>
-                    <p>{service.description}</p>
-                    <p>Price: {service.price}</p>
-                    <div>
-                      {service.categories.map(cat => (
-                        <Tag color="blue" key={cat.name} style={{ margin: '0px 0' }}>
-                          {cat.name.toUpperCase()}
-                        </Tag>
-                      ))}
-                    </div>
-                  </div>
-                }
-              />
-            </Card>
+            <CustomCard {...service} />
           </Col>
         ))}
       </Row>
-      {/* Add pagination for card view */}
       <div style={{ textAlign: 'center', marginTop: '16px' }}>
         <Pagination defaultCurrent={1} total={50} />
       </div>
     </div>
   );
+  
   
   
   
@@ -172,6 +155,7 @@ const ServiceList = () => {
 
   return (
     <div style={{ padding: '15px' }}>
+      
       <Row justify="end"style={{ marginBottom: '15px' }}>
         <Col>
           <Radio.Group

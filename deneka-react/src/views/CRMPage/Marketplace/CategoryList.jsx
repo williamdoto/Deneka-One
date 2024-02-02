@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, Spin, Alert, Tag, Card, Col, Row, Radio, Pagination } from 'antd';
 import { UnorderedListOutlined, AppstoreOutlined } from '@ant-design/icons';
+import CustomCard from './CustomCard';
 import './CategoryList.css'; // Import your custom CSS
 
 const CategoryList = () => {
@@ -60,16 +61,17 @@ const CategoryList = () => {
 
   const cardView = (
     <div>
-      <Row gutter={16}>
+      <Row gutter={16} style={{ margin: '0 auto', maxWidth: '1200px', }}>
         {categories.map(category => (
-          <Col key={category.id} span={8}>
-            <Card title={category.name} style={{ marginBottom: '16px' }}>
-              <p>Total Services: {category.servicesCount}</p>
-            </Card>
+          <Col key={category.id} span={4}>
+            <CustomCard
+              title={category.name}
+              description={`Total Services: ${category.servicesCount}`}
+              
+            />
           </Col>
         ))}
       </Row>
-      {/* Add pagination for card view */}
       <div style={{ textAlign: 'center', marginTop: '16px' }}>
         <Pagination defaultCurrent={1} total={50} />
       </div>
@@ -95,8 +97,8 @@ const CategoryList = () => {
             onChange={handleViewChange}
             buttonStyle="solid"
           >
-            <Radio.Button value="table" icon={<UnorderedListOutlined />}>Table View</Radio.Button>
-            <Radio.Button value="card" icon={<AppstoreOutlined />}>Card View</Radio.Button>
+            <Radio.Button value="table" icon={<UnorderedListOutlined />}>Table</Radio.Button>
+            <Radio.Button value="card" icon={<AppstoreOutlined />}>Card</Radio.Button>
           </Radio.Group>
         </Col>
       </Row>
