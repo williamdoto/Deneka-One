@@ -28,8 +28,7 @@ async function findUserByEmail(email) {
       // Log the email being used to find the user
       console.log("Looking up user with email:", email.toLowerCase());
 
-      const query = `SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_HASH, TOTP_SECRET FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER WHERE LOWER(EMAIL) = LOWER(?)`;
-
+      const query = `SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD_HASH, TOTP_SECRET, IS_TOTP_SET FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER WHERE LOWER(EMAIL) = LOWER(?)`;
       conn.execute({
         sqlText: query,
         binds: [email.toLowerCase()], // Email is already expected to be in the correct case
@@ -47,7 +46,8 @@ async function findUserByEmail(email) {
               lastName: user.LAST_NAME,
               email: user.EMAIL,
               passwordHash: user.PASSWORD_HASH,
-              totpSecret: user.TOTP_SECRET
+              totpSecret: user.TOTP_SECRET,
+              isTotpSet: user.IS_TOTP_SET
             });
           } else {
             resolve(null);
@@ -58,7 +58,7 @@ async function findUserByEmail(email) {
   });
 }
 
-async function storeTotpSecret(email, secret) {
+async function storeTotpSecret(email, secret, setTotpFlag = false) {
   const connection = snowflake.createConnection(connectionOptions);
 
   if (!email || !secret) {
@@ -72,11 +72,19 @@ async function storeTotpSecret(email, secret) {
         return reject(err);
       }
 
-      const query = `UPDATE DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER SET TOTP_SECRET = ? WHERE LOWER(EMAIL) = LOWER(?)`;
+      let query = `UPDATE DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER SET TOTP_SECRET = ?`;
+      const binds = [secret];
+
+      if (setTotpFlag) {
+        query += `, IS_TOTP_SET = TRUE`;
+      }
+
+      query += ` WHERE LOWER(EMAIL) = LOWER(?)`;
+      binds.push(email);
 
       conn.execute({
         sqlText: query,
-        binds: [secret, email],
+        binds: binds,
         complete: (err, stmt, rows) => {
           if (err) {
             console.error('Failed to execute query:', err);
@@ -90,30 +98,52 @@ async function storeTotpSecret(email, secret) {
   });
 }
 
+async function checkTotpSetup(req, res) {
+  const { email } = req.body;
+
+  try {
+    const user = await findUserByEmail(email);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Ensure that isTotpSet is being sent correctly
+    res.json({ success: true, isTotpSet: user.isTotpSet });
+  } catch (error) {
+    console.error('Error checking TOTP setup:', error);
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+}
+
+
 
 
 async function setupTotp(req, res) {
-  const { email } = req.body; // Ensure email is being passed correctly
+  const { email } = req.body;
   console.log("Email in setupTotp:", email);
 
-  // Generate a TOTP secret
-  const secret = speakeasy.generateSecret({ length: 20 });
-  console.log("Secret in setupTotp:", secret.base32);
-
   try {
-    // Store the secret in your database
-    await storeTotpSecret(email, secret.base32);
+    const user = await findUserByEmail(email);
 
-    // Generate a QR code for scanning
+    if (user.isTotpSet) {
+      return res.status(403).json({ success: false, message: 'TOTP already set up. Contact customer service for help.' });
+    }
+
+    const secret = speakeasy.generateSecret({ length: 20 });
+    console.log("Secret in setupTotp:", secret.base32);
+
+    await storeTotpSecret(email, secret.base32, true); // Pass true to indicate TOTP setup
+
     const qrCodeUrl = await generateQrCode(secret.base32);
 
-    // Send back the QR code URL and the secret
     res.json({ secret: secret.base32, qrCodeUrl, plainSecret: secret.base32 });
   } catch (error) {
     console.error('Error setting up TOTP:', error);
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 }
+
 
 async function generateQrCode(secret) {
   const qrcode = require('qrcode');
@@ -343,4 +373,4 @@ async function verifyTotp(req, res) {
   }
 }
 
-module.exports = { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp};
+module.exports = { signIn, generateOtp, verifyOtp, setupTotp, checkTotpSetup, generateQrCode, verifyTotp};

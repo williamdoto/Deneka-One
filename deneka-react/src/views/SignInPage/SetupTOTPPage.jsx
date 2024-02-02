@@ -9,20 +9,27 @@ const SetupTOTPPage = () => {
   const location = useLocation();
   const userEmail = location.state?.email;
 
-  useEffect(() => {
+
+  const initiateTotpSetup = () => {
     axios.post('http://localhost:1337/api/setup-totp', { email: userEmail })
       .then(response => {
         if (response.data && response.data.qrCodeUrl) {
           setQrCodeUrl(response.data.qrCodeUrl);
           setTotpSecret(response.data.plainSecret);
+          // setIsTotpSetupDisabled(true); // Disable further setup attempts
         } else {
-          console.error('QR Code URL not received:', response.data);
+          message.error('Failed to set up TOTP.');
         }
       })
       .catch(error => {
-        message.error('Error fetching QR code: ' + error);
+        if (error.response && error.response.status === 403) {
+          message.warning('TOTP is already set up. Contact customer service for assistance.');
+          // setIsTotpSetupDisabled(true);
+        } else {
+          message.error('Error setting up TOTP: ' + error.message);
+        }
       });
-  }, [userEmail]);
+  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(totpSecret)
@@ -45,6 +52,9 @@ const SetupTOTPPage = () => {
           <Button onClick={copyToClipboard} style={{ marginLeft: 10 }}>Copy Secret</Button>
         </div>
       )}
+      <Button type="primary" onClick={initiateTotpSetup}>
+        Setup TOTP
+      </Button>
     </Card>
   );
 };
