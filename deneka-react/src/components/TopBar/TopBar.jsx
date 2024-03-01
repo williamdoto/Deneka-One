@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import './TopBar.css';
 import { UserOutlined, BellOutlined, BulbOutlined, SearchOutlined } from '@ant-design/icons';
-import { Dropdown, Input } from 'antd';
+import { Menu, Dropdown, Input } from 'antd';
 import logo from '../../assets/media/Deneka-One.png'; // Importing the logo
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleDarkMode, toggleNotificationVisible } from '../../redux/slices/uiSlice';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { signOut } from '../../redux/slices/authSlice'; // Adjust the path as necessary
+import { Link, useNavigate } from 'react-router-dom';
 
 const TopBar = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
   const { isDarkMode } = useSelector((state) => state.ui);
+  const userId = useSelector((state) => state.auth.user?.id);
   const [searchInput, setSearchInput] = useState('');
 
   const handleToggleDarkMode = () => {
@@ -30,24 +32,48 @@ const TopBar = () => {
   };
 
   const handleLogout = () => {
-    // Clear the JWT token and any other relevant data
-    localStorage.removeItem('jwtToken');
-    // Navigate to the signin page
-    navigate('/signin');
+    console.log('Logout clicked', userId);
+    if (userId) {
+      dispatch(signOut(userId))
+        .unwrap()
+        .then(() => {
+          console.log('Logout successful');
+          localStorage.removeItem('jwtToken'); // Clear JWT token
+          navigate('/signin'); // Navigate to the signin page
+        })
+        .catch((error) => {
+          console.error('Logout failed:', error);
+        });
+    }
   };
 
-  const items = [
-    {
-      label: <a target="_blank" rel="noopener noreferrer" href="https://www.google.com">My Profile</a>,
-      key: '0',
-    },
-    {
-      label: <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">Settings</a>,
-      key: '1',
-    },
-    { type: 'divider' },
-    { label: 'Log Out', key: '3', onClick: handleLogout },
-  ];
+  // Menu item click handler
+  const handleMenuClick = (e) => {
+    if (e.key === "logout") {
+      handleLogout();
+    }
+    // Handle other menu items here if needed
+  };
+
+  // Define the dropdown menu
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key="profile" icon={<UserOutlined />}>
+        <a target="_blank" rel="noopener noreferrer" href="https://www.google.com">
+          My Profile
+        </a>
+      </Menu.Item>
+      <Menu.Item key="settings" icon={<BulbOutlined />}>
+        <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
+          Settings
+        </a>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="logout" icon={<UserOutlined />}>
+        Log Out
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <div className={`topbar ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
@@ -69,12 +95,7 @@ const TopBar = () => {
         <button className={`icon-button power-btn ${isDarkMode ? 'icon-button-dark' : ''}`} onClick={handleToggleDarkMode}>
           <BulbOutlined style={{ color: isDarkMode ? 'yellow' : 'gray' }} />
         </button>
-        <Dropdown menu={{ items }}>
-          <button className={`icon-button power-btn ${isDarkMode ? 'icon-button-dark' : ''}`} onClick={toggleNotificationBar}>
-            <BellOutlined />
-          </button>
-        </Dropdown>
-        <Dropdown menu={{ items }}>
+        <Dropdown overlay={menu}>
           <button className={`icon-button profile-btn ${isDarkMode ? 'icon-button-dark' : ''}`}>
             <UserOutlined />
           </button>

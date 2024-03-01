@@ -202,6 +202,9 @@ const signIn = async (req, res) => {
       return res.status(401).json({ error: 'Password does not match.' });
     }
 
+    // Record sign-in time
+    await recordSignInTime(user.id);
+
     // Generate a JWT token
     const token = jwt.sign({ userId: user.id }, 'your_jwt_secret_key', {
       expiresIn: '24h',
@@ -214,6 +217,65 @@ const signIn = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
+
+async function recordSignInTime(userId) {
+  const connection = snowflake.createConnection(connectionOptions);
+
+  // Connect to the database
+  return new Promise((resolve, reject) => {
+    connection.connect((err, conn) => {
+      if (err) {
+        console.error('Unable to connect to Snowflake:', err);
+        return reject(err);
+      }
+
+      // Update query to set the LAST_SIGN_IN time
+      const query = `UPDATE DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER SET LAST_SIGN_IN = CURRENT_TIMESTAMP() WHERE ID = ?`;
+
+      // Execute the query
+      conn.execute({
+        sqlText: query,
+        binds: [userId],
+        complete: (err, stmt, rows) => {
+          if (err) {
+            console.error('Failed to execute query:', err);
+            return reject(err);
+          }
+          console.log("Sign-in time updated for user ID:", userId);
+          resolve();
+        }
+      });
+    });
+  });
+}
+
+async function recordSignOutTime(userId) {
+  const connection = snowflake.createConnection(connectionOptions);
+
+  return new Promise((resolve, reject) => {
+    connection.connect((err, conn) => {
+      if (err) {
+        console.error('Unable to connect to Snowflake:', err);
+        return reject(err);
+      }
+
+      const query = `UPDATE DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.USER SET LAST_SIGN_OUT = CURRENT_TIMESTAMP() WHERE ID = ?`;
+
+      conn.execute({
+        sqlText: query,
+        binds: [userId],
+        complete: (err, stmt, rows) => {
+          if (err) {
+            console.error('Failed to execute query:', err);
+            return reject(err);
+          }
+          console.log("Sign-out time updated for user ID:", userId);
+          resolve();
+        }
+      });
+    });
+  });
+}
 
 
 async function generateOtp(req, res) {
@@ -373,4 +435,4 @@ async function verifyTotp(req, res) {
   }
 }
 
-module.exports = { signIn, generateOtp, verifyOtp, setupTotp, checkTotpSetup, generateQrCode, verifyTotp};
+module.exports = { signIn, generateOtp, verifyOtp, setupTotp, checkTotpSetup, generateQrCode, verifyTotp, recordSignOutTime};

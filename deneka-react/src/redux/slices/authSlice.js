@@ -1,8 +1,49 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
+// Placeholder for the actual API call to record sign-out time
+async function recordSignOutTimeAPI(userId) {
+  try {
+    const response = await fetch('http://localhost:1337/api/sign-out', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId }),
+    });
+
+    const data = await response.json(); // Parse JSON response
+
+    if (!response.ok) {
+      // Handle HTTP-level errors
+      throw new Error(data.message || 'Failed to record sign-out time');
+    }
+
+    return data; // Return the response data if everything went well
+  } catch (error) {
+    // Handle network errors or errors thrown from the condition above
+    console.error('Error recording sign-out time:', error);
+    throw error; // Re-throw the error to be handled by the caller
+  }
+}
+
+export const signOut = createAsyncThunk(
+  'auth/signOut',
+  async (userId, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await recordSignOutTimeAPI(userId);
+      console.log('Sign-out successful:', response);
+      dispatch(logout()); // Dispatch the logout action here
+      return response;
+    } catch (error) {
+      console.error('Error during sign out:', error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const initialState = {
-  isAuthenticated: true,
-  totpRequired: true, // New state to track if TOTP input is required
+  isAuthenticated: false,
+  totpRequired: false,
   user: null,
 };
 
@@ -11,11 +52,16 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      state.totpRequired = true; // Set TOTP as required upon login
-      state.user = action.payload;
+      console.log('Login payload:', action.payload);
+      // state.isAuthenticated = true; // Assuming we set isAuthenticated here
+      state.totpRequired = action.payload.totpRequired;
+      state.user = action.payload.user; // Ensure action.payload includes the user object
+      console.log('Logged in user:', state.user);
     },
+    
     completeTOTP: (state) => {
-      state.isAuthenticated = true; // Set isAuthenticated to true after TOTP is completed
+      state.isAuthenticated = true;
+      console.log('Logged in user after totp:', state.user);
       state.totpRequired = false;
     },
     logout: (state) => {
@@ -25,12 +71,17 @@ export const authSlice = createSlice({
     },
     checkAuth: (state) => {
       const token = localStorage.getItem('jwtToken');
-      state.isAuthenticated = true;
-      // state.isAuthenticated = !!token;
-      // set user details if needed
+      state.isAuthenticated = !!token;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(signOut.fulfilled, (state) => {
+        // This is already handled in logout reducer
+      });
   },
 });
 
 export const { login, completeTOTP, logout, checkAuth } = authSlice.actions;
+
 export default authSlice.reducer;

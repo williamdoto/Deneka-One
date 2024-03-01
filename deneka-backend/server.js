@@ -6,9 +6,11 @@ const cors = require('cors')
 const path = require('path')
 const signupRoute = require('./routes/signupRoute')
 const signinRoute = require('./routes/signinRoute')
+const inquiryRoute = require('./routes/inquiryRoute');
 const { updateUserDetails, submitQuestionnaireAnswers } = require('./controller/signupController');
-const { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp, checkTotpSetup } = require('./controller/signinController');
+const { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp, checkTotpSetup , recordSignOutTime} = require('./controller/signinController');
 const { companySignUp } = require('./controller/companySignupController');
+const { createInquiry } = require('./controller/inquiryController');
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
 const useragent = require('express-useragent');
 // const corsOptions = require('./config/corsOptions');
@@ -70,7 +72,7 @@ app.get('/auth/onedrive/callback', async (req, res) => {
 
 app.use(cors(corsOptions));
 
-app.use(express.json())
+app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }))
 
@@ -91,7 +93,16 @@ app.post('/api/check-totp-setup', checkTotpSetup);
 app.post('/api/verify-totp', verifyTotp);
 app.post('/api/update-user-details', updateUserDetails);
 app.post('/api/submit-questionnaire-answers', submitQuestionnaireAnswers);
-
+app.post('/api/sign-out', async (req, res) => {
+    try {
+        const userId = req.body.userId; // Assuming you send the userId in the request body
+        await recordSignOutTime(userId);
+        res.json({ success: true, message: 'Sign-out time recorded successfully' });
+    } catch (error) {
+        console.error('Error recording sign-out time:', error);
+        res.status(500).json({ success: false, message: 'Failed to record sign-out time' });
+    }
+});
 
 
 // Password reset routes
@@ -110,6 +121,10 @@ app.all('*', (req, res) => {
     // }
 
 })
+
+// create inquiry 
+app.use('/api', inquiryRoute);
+app.post('/api/create-inquiry', createInquiry);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
