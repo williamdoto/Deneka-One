@@ -110,6 +110,9 @@ app.post('/api/request-reset', requestReset);
 app.get('/api/verify-reset/:token', verifyResetToken); // Assuming token is sent as a URL parameter
 app.post('/api/reset-password', resetPassword);
 
+app.use('/api', inquiryRoute);
+app.post('/api/create-inquiry', createInquiry);
+
 app.all('*', (req, res) => {
     res.status(404).send("Error")
     // if (req.accepts('html')) {
@@ -123,8 +126,7 @@ app.all('*', (req, res) => {
 })
 
 // create inquiry 
-app.use('/api', inquiryRoute);
-app.post('/api/create-inquiry', createInquiry);
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

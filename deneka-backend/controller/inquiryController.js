@@ -1,3 +1,6 @@
+const snowflake = require('snowflake-sdk');
+const {connectionPool, connectionOptions} = require('../config/snowflake');
+
 const createInquiry = async (req, res) => {
     let connection = null;
   
