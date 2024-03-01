@@ -95,7 +95,12 @@ const TopBar = () => {
         <button className={`icon-button power-btn ${isDarkMode ? 'icon-button-dark' : ''}`} onClick={handleToggleDarkMode}>
           <BulbOutlined style={{ color: isDarkMode ? 'yellow' : 'gray' }} />
         </button>
-        <Dropdown overlay={menu}>
+
+          <button className={`icon-button power-btn ${isDarkMode ? 'icon-button-dark' : ''}`} onClick={toggleNotificationBar}>
+            <BellOutlined />
+          </button>
+
+        <Dropdown menu={{ items }}>
           <button className={`icon-button profile-btn ${isDarkMode ? 'icon-button-dark' : ''}`}>
             <UserOutlined />
           </button>

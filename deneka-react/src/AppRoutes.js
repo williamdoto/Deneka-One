@@ -14,7 +14,10 @@ import HomePage from './views/HomePage';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import ForgotpasswordPage from './components/ForgotPasswordPage';
 import NotFoundPage from './views/Error/NotFoundPage';
-import ServiceManager from './views/CRMPage/ServiceManager';
+import ServiceManager from './views/CRMPage/Marketplace/ServiceManager';
+import TicketList from './views/CRMPage/Ticketing/TicketList';
+import EmployeeList from './views/CRMPage/Employees/EmployeeList';
+
 import { Routes, Route, Navigate } from 'react-router-dom';
 import React from 'react';
 
@@ -29,7 +32,8 @@ const AppRoutes = () => {
       {/* Protected routes */}
       <Route path="/dashboard" element={isAuthenticated ? <HomePage /> : <Navigate to={totpRequired ? "/totpinput" : "/signin"} />} />
       <Route path="/services" element={isAuthenticated ? <ServiceManager /> : <Navigate to={totpRequired ? "/totpinput" : "/signin"} />} />
-      
+      <Route path="/ticket" element={isAuthenticated ? <TicketList /> : <Navigate to={totpRequired ? "/totpinput" : "/signin"} />} />
+      <Route path="/employees" element={isAuthenticated ? <EmployeeList /> : <Navigate to={totpRequired ? "/totpinput" : "/signin"} />} />
 
       {/* Public routes */}
       <Route path="/signup" element={!isAuthenticated ? <SignupPage /> : <Navigate to="/dashboard" />} />

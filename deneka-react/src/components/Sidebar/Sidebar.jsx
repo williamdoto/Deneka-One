@@ -41,9 +41,16 @@ class SidebarMenu extends React.Component {
                     <Menu.Item key="7">Option 3</Menu.Item>
                     <Menu.Item key="8">Option 4</Menu.Item>
                 </SubMenu>
-                <Menu.Item key="4" icon={<TeamOutlined style={{ color: iconColor }} />}>
-                    {!collapsed && 'Team'}
-                </Menu.Item>
+                <SubMenu key="sub4" icon={<TeamOutlined style={{ color: iconColor }} />} title={!collapsed && 'Team'}>
+                    <Menu.Item key="10">
+                    <Link to="/ticket">Tickets</Link>
+                    </Menu.Item>
+                    <Menu.Item key="11">
+                    <Link to="/employees">Employees</Link>
+                    </Menu.Item>
+                    
+                </SubMenu>
+
                 {!collapsed && (
                     <Menu.Item key="togglePosition">
                         {'Sidebar Alignment'}

@@ -9,7 +9,7 @@ import {
   setSelectedCategories, 
   setCategories, 
   addNewService 
-} from '../../redux/slices/servicesSlice';
+} from '../../../redux/slices/servicesSlice';
 
 const { Title, Paragraph } = Typography;
 const { Option } = Select;
