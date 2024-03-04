@@ -1,7 +1,5 @@
-const express = require('express');
-const router = express.Router();
 const snowflake = require('snowflake-sdk');
-const { connectionOptions } = require('../config/snowflake.js');
+const {connectionPool, connectionOptions} = require('../config/snowflake');
 
 const createInquiry = async (req, res) => {
     let connection = null;
