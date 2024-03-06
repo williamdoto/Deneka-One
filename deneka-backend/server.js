@@ -11,6 +11,7 @@ const { updateUserDetails, submitQuestionnaireAnswers } = require('./controller/
 const { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp, checkTotpSetup , recordSignOutTime} = require('./controller/signinController');
 const { companySignUp } = require('./controller/companySignupController');
 const { createInquiry , deleteInquiry } = require('./controller/inquiryController');
+const { createInquiry, viewSingleInquiry, listAllInquiries } = require('./controller/inquiryController');
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
 const useragent = require('express-useragent');
 // const corsOptions = require('./config/corsOptions');
@@ -110,10 +111,17 @@ app.post('/api/request-reset', requestReset);
 app.get('/api/verify-reset/:token', verifyResetToken); // Assuming token is sent as a URL parameter
 app.post('/api/reset-password', resetPassword);
 
+
 app.use('/api', inquiryRoute);
 app.post('/api/create-inquiry', createInquiry);
 app.delete('/api/delete-inquiry', deleteInquiry);
 
+// app.use('/api', inquiryRoute);
+app.get('/api/find-inquiry/:id', viewSingleInquiry);
+app.get('/api/view-inquiry', listAllInquiries);
+
+
+app.post('/api/create-inquiry', createInquiry);
 app.all('*', (req, res) => {
     res.status(404).send("Error")
     // if (req.accepts('html')) {
