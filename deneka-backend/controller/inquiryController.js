@@ -163,7 +163,7 @@ const createInquiry = async (req, res) => {
 
   
 
-  module.exports = { createInquiry, viewSingleInquiry, listAllInquiries };
+
 
   // delete inquiry
   const deleteInquiry = async (req, res) => {
@@ -224,6 +224,6 @@ const createInquiry = async (req, res) => {
     }
 };
 
-  module.exports = { createInquiry , deleteInquiry};
+module.exports = { createInquiry, viewSingleInquiry, listAllInquiries , deleteInquiry};
 
   
