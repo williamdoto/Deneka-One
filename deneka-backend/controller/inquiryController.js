@@ -63,6 +63,65 @@ const createInquiry = async (req, res) => {
     }
   };
 
-  module.exports = { createInquiry };
+  // delete inquiry
+  const deleteInquiry = async (req, res) => {
+    let connection = null;
+
+    try {
+        const { inqId } = req.body; // Assuming you're passing the inquiry ID as a URL parameter
+
+        if (!inqId) {
+            return res.status(400).json({ message: "Missing inquiry ID." });
+        }
+
+        // Connect to Snowflake
+        connection = snowflake.createConnection(connectionOptions);
+
+        await new Promise((resolve, reject) => {
+            connection.connect((err, conn) => {
+                if (err) {
+                    console.error('Unable to connect to Snowflake:', err);
+                    reject(err);
+                }
+                resolve(conn);
+            });
+        });
+
+        // Define the SQL delete statement
+        const deleteInquirySQL = `
+            DELETE FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.INQUIRY
+            WHERE INQ_ID = ?;
+        `;
+
+        // Execute the delete statement
+        await new Promise((resolve, reject) => {
+            connection.execute({
+                sqlText: deleteInquirySQL,
+                binds: [inqId],
+                complete: (err, stmt, rows) => {
+                    if (err) {
+                        console.error('Failed to execute statement:', err);
+                        reject(err);
+                    }
+                    console.log('Inquiry deleted:', rows);
+                    resolve(rows);
+                }
+            });
+        });
+
+        // Respond to the client indicating success
+        res.json({ message: "Inquiry deleted successfully" });
+    } catch (error) {
+        console.error('Error during inquiry deletion:', error);
+        res.status(500).json({ message: "Inquiry deletion failed due to an error." });
+    } finally {
+        // Always close the connection whether the try block succeeds or not
+        if (connection) {
+            connection.destroy();
+        }
+    }
+};
+
+  module.exports = { createInquiry , deleteInquiry};
 
   

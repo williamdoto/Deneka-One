@@ -10,7 +10,7 @@ const inquiryRoute = require('./routes/inquiryRoute');
 const { updateUserDetails, submitQuestionnaireAnswers } = require('./controller/signupController');
 const { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp, checkTotpSetup , recordSignOutTime} = require('./controller/signinController');
 const { companySignUp } = require('./controller/companySignupController');
-const { createInquiry } = require('./controller/inquiryController');
+const { createInquiry , deleteInquiry } = require('./controller/inquiryController');
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
 const useragent = require('express-useragent');
 // const corsOptions = require('./config/corsOptions');
@@ -112,6 +112,7 @@ app.post('/api/reset-password', resetPassword);
 
 app.use('/api', inquiryRoute);
 app.post('/api/create-inquiry', createInquiry);
+app.delete('/api/delete-inquiry', deleteInquiry);
 
 app.all('*', (req, res) => {
     res.status(404).send("Error")
@@ -125,7 +126,7 @@ app.all('*', (req, res) => {
 
 })
 
-// create inquiry 
+
 
 
 app.listen(PORT, () => {
