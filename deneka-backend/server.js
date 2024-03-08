@@ -12,6 +12,7 @@ const { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp, c
 const { companySignUp } = require('./controller/companySignupController');
 const { createInquiry, viewSingleInquiry, listAllInquiries } = require('./controller/inquiryController');
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
+const { createTicket} = require('./controller/ticketController');
 const useragent = require('express-useragent');
 // const corsOptions = require('./config/corsOptions');
 require('dotenv').config();
@@ -115,6 +116,7 @@ app.get('/api/find-inquiry/:id', viewSingleInquiry);
 app.get('/api/view-inquiry', listAllInquiries);
 
 app.post('/api/create-inquiry', createInquiry);
+app.post('/api/create-ticket', createTicket); 
 app.all('*', (req, res) => {
     res.status(404).send("Error")
     // if (req.accepts('html')) {
