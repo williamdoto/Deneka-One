@@ -111,5 +111,106 @@ const createTicket = async (req, res) => {
     }
 };
 
-  module.exports = { createTicket, deleteSingle };
+const findTicketById = async (req, res) => {
+  let connection = null;
+  try {
+      console.log("Trying connection");
+      const ticId = req.params.id;
+
+      if (!ticId) {
+          return res.status(400).json({ message: "Missing ticket ID." });
+      }
+
+      connection = snowflake.createConnection(connectionOptions);
+
+      await new Promise((resolve, reject) => {
+          connection.connect((err, conn) => {
+              if (err) {
+                  console.error('Unable to connect to Snowflake:', err);
+                  reject(err);
+              }
+              resolve(conn);
+          });
+      });
+
+      const query = `
+          SELECT * FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.TICKETS
+          WHERE TIC_ID = ?;
+      `;
+
+      await new Promise((resolve, reject) => {
+          connection.execute({
+              sqlText: query,
+              binds: [ticId],
+              complete: (err, stmt, rows) => {
+                  if (err) {
+                      console.error('Failed to execute statement:', err);
+                      reject(err);
+                  }
+                  if (rows.length > 0) {
+                      console.log('Ticket retrieved:', rows);
+                      res.json(rows[0]);
+                  } else {
+                      res.status(404).json({ message: "Ticket not found." });
+                  }
+                  resolve(rows);
+              }
+          });
+      });
+  } catch (error) {
+      console.error('Error during fetching a ticket:', error);
+      res.status(500).json({ message: "Failed to fetch ticket due to an error." });
+  } finally {
+      if (connection) {
+          connection.destroy();
+      }
+  }
+};
+
+const listAllTickets = async (req, res) => {
+  let connection = null;
+  try {
+      connection = snowflake.createConnection(connectionOptions);
+
+      await new Promise((resolve, reject) => {
+          connection.connect((err, conn) => {
+              if (err) {
+                  console.error('Unable to connect to Snowflake:', err);
+                  reject(err);
+              }
+              resolve(conn);
+          });
+      });
+
+      const query = `
+          SELECT * FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.TICKETS;
+      `;
+
+      await new Promise((resolve, reject) => {
+          connection.execute({
+              sqlText: query,
+              complete: (err, stmt, rows) => {
+                  if (err) {
+                      console.error('Failed to execute statement:', err);
+                      reject(err);
+                  }
+                  console.log('Tickets retrieved:', rows);
+                  res.json(rows);
+                  resolve(rows);
+              }
+          });
+      });
+  } catch (error) {
+      console.error('Error during fetching all tickets:', error);
+      res.status(500).json({ message: "Failed to fetch tickets due to an error." });
+  } finally {
+      if (connection) {
+          connection.destroy();
+      }
+  }
+};
+
+
+
+  module.exports = { createTicket, deleteSingle, findTicketById, listAllTickets };
   

@@ -13,7 +13,7 @@ const { companySignUp } = require('./controller/companySignupController');
 const { createInquiry , deleteInquiry } = require('./controller/inquiryController');
 const { viewSingleInquiry, listAllInquiries } = require('./controller/inquiryController');
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
-const { createTicket, deleteSingle} = require('./controller/ticketController');
+const { createTicket, deleteSingle, findTicketById, listAllTickets} = require('./controller/ticketController');
 const useragent = require('express-useragent');
 // const corsOptions = require('./config/corsOptions');
 require('dotenv').config();
@@ -125,6 +125,8 @@ app.get('/api/view-inquiry', listAllInquiries);
 app.post('/api/create-inquiry', createInquiry);
 app.post('/api/create-ticket', createTicket); 
 app.delete('/api/ticket/:id', deleteSingle);
+app.get('/api/ticket/:id',findTicketById);
+app.get('/api/tickets',listAllTickets);
 app.all('*', (req, res) => {
     res.status(404).send("Error")
     // if (req.accepts('html')) {
