@@ -211,6 +211,63 @@ const listAllTickets = async (req, res) => {
 };
 
 
+const getClientTickets = async (req, res) => {
+    let connection = null;
+    try {
+        console.log("Trying connection");
+        const { clientId } = req.params; // Assume the client ID is passed as a URL parameter
+  
+        if (!clientId) {
+            return res.status(400).json({ message: "Missing client ID." });
+        }
+  
+        connection = snowflake.createConnection(connectionOptions);
+  
+        await new Promise((resolve, reject) => {
+            connection.connect((err, conn) => {
+                if (err) {
+                    console.error('Unable to connect to Snowflake:', err);
+                    reject(err);
+                }
+                resolve(conn);
+            });
+        });
+  
+        const query = `
+            SELECT * FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.TICKETS
+            WHERE CLIENT_ID = ?;
+        `;
+  
+        await new Promise((resolve, reject) => {
+            connection.execute({
+                sqlText: query,
+                binds: [clientId],
+                complete: (err, stmt, rows) => {
+                    if (err) {
+                        console.error('Failed to execute statement:', err);
+                        reject(err);
+                    }
+                    if (rows.length > 0) {
+                        console.log('Tickets retrieved for client:', rows);
+                        res.json(rows);
+                    } else {
+                        res.status(404).json({ message: "No tickets found for the specified client." });
+                    }
+                    resolve(rows);
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error during retrieving client tickets:', error);
+        res.status(500).json({ message: "Failed to retrieve tickets due to an error." });
+    } finally {
+        if (connection) {
+            connection.destroy();
+        }
+    }
+  };
+  
 
-  module.exports = { createTicket, deleteSingle, findTicketById, listAllTickets };
+
+  module.exports = { createTicket, deleteSingle, findTicketById, listAllTickets, getClientTickets };
   

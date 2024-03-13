@@ -2,67 +2,68 @@ const snowflake = require('snowflake-sdk');
 const {connectionPool, connectionOptions} = require('../config/snowflake');
 
 const createInquiry = async (req, res) => {
-    let connection = null;
+  let connection = null;
+  console.log("Trying connection");
+  try {
     console.log("Trying connection");
-    try {
-      console.log("Trying connection");
-      // Extract inquiry details from the request body
-      const { title, categoryId, description, link } = req.body;
-  
-      // Validation: Ensure all required fields are provided
-      if (!title || !link) {
-        return res.status(400).json({ message: "Missing required fields." });
-      }
-  
-      // Connect to Snowflake
-      connection = snowflake.createConnection(connectionOptions);
-  
-      await new Promise((resolve, reject) => {
-        connection.connect((err, conn) => {
+    // Extract inquiry details from the request body
+    const { title, categoryId, description, link, clientId } = req.body; // Added clientId here
+
+    // Validation: Ensure all required fields are provided
+    if (!title || !categoryId || !description || !clientId) { // Ensure clientId is considered a required field
+      return res.status(400).json({ message: "Missing required fields." });
+    }
+
+    // Connect to Snowflake
+    connection = snowflake.createConnection(connectionOptions);
+
+    await new Promise((resolve, reject) => {
+      connection.connect((err, conn) => {
+        if (err) {
+          console.error('Unable to connect to Snowflake:', err);
+          reject(err);
+        }
+        resolve(conn);
+      });
+    });
+
+    // Define the SQL insert statement
+    const insertInquiry = `
+      INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.INQUIRY
+        (INQ_TITLE, INQ_CATEGORY_ID, INQ_DESC, INQ_LINK, INQ_DATE, CLIENT_ID)
+      VALUES
+        (?, ?, ?, ?, CURRENT_TIMESTAMP(), ?); // Added placeholder for clientId
+    `;
+
+    // Execute the insert statement
+    await new Promise((resolve, reject) => {
+      connection.execute({
+        sqlText: insertInquiry,
+        binds: [title, categoryId, description, link, clientId], // Included clientId in the binds array
+        complete: (err, stmt, rows) => {
           if (err) {
-            console.error('Unable to connect to Snowflake:', err);
+            console.error('Failed to execute statement:', err);
             reject(err);
           }
-          resolve(conn);
-        });
+          console.log('Inquiry created:', rows);
+          resolve(rows);
+        }
       });
-  
-      // Define the SQL insert statement
-      const insertInquiry = `
-        INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.INQUIRY
-          (INQ_TITLE, INQ_CATEGORY_ID, INQ_DESC, INQ_LINK, INQ_DATE)
-        VALUES
-          (?, ?, ?, ?, CURRENT_TIMESTAMP());
-      `;
-  
-      // Execute the insert statement
-      await new Promise((resolve, reject) => {
-        connection.execute({
-          sqlText: insertInquiry,
-          binds: [title, categoryId, description, link],
-          complete: (err, stmt, rows) => {
-            if (err) {
-              console.error('Failed to execute statement:', err);
-              reject(err);
-            }
-            console.log('Inquiry created:', rows);
-            resolve(rows);
-          }
-        });
-      });
-  
-      // Respond to the client indicating success
-      res.json({ message: "Inquiry created successfully" });
-    } catch (error) {
-      console.error('Error during inquiry creation:', error);
-      res.status(500).json({ message: "Inquiry creation failed due to an error." });
-    } finally {
-      // Always close the connection whether the try block succeeds or not
-      if (connection) {
-        connection.destroy();
-      }
+    });
+
+    // Respond to the client indicating success
+    res.json({ message: "Inquiry created successfully" });
+  } catch (error) {
+    console.error('Error during inquiry creation:', error);
+    res.status(500).json({ message: "Inquiry creation failed due to an error." });
+  } finally {
+    // Always close the connection whether the try block succeeds or not
+    if (connection) {
+      connection.destroy();
     }
-  };
+  }
+};
+
 
   const listAllInquiries = async (req, res) => {
     let connection = null;
@@ -224,6 +225,64 @@ const createInquiry = async (req, res) => {
     }
 };
 
-module.exports = { createInquiry, viewSingleInquiry, listAllInquiries , deleteInquiry};
+const listInquiriesByClient = async (req, res) => {
+  let connection = null;
+  try {
+    console.log("Trying connection");
+    // Connect to Snowflake
+    connection = snowflake.createConnection(connectionOptions);
+
+    await new Promise((resolve, reject) => {
+      connection.connect((err, conn) => {
+        if (err) {
+          console.error('Unable to connect to Snowflake:', err);
+          reject(err);
+        }
+        resolve(conn);
+      });
+    });
+
+    // Extract client ID from the request parameters
+    const clientId = req.params.clientId; // Assuming the client ID is passed as a URL parameter
+
+    if (!clientId) {
+      return res.status(400).json({ message: "Missing client ID." });
+    }
+
+    const query = `
+      SELECT * FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.INQUIRY
+      WHERE CLIENT_ID = ?;
+    `;
+
+    await new Promise((resolve, reject) => {
+      connection.execute({
+        sqlText: query,
+        binds: [clientId],
+        complete: (err, stmt, rows) => {
+          if (err) {
+            console.error('Failed to execute statement:', err);
+            reject(err);
+          }
+          if (rows.length > 0) {
+            console.log('Inquiries retrieved for client ID:', clientId, rows);
+            res.json(rows);
+          } else {
+            res.status(404).json({ message: "No inquiries found for this client." });
+          }
+          resolve(rows);
+        }
+      });
+    });
+  } catch (error) {
+    console.error('Error during listing inquiries by client:', error);
+    res.status(500).json({ message: "Failed to list inquiries due to an error." });
+  } finally {
+    if (connection) {
+      connection.destroy();
+    }
+  }
+};
+
+module.exports = { createInquiry, viewSingleInquiry, listAllInquiries , deleteInquiry, listInquiriesByClient};
 
   

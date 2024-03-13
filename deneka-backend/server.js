@@ -11,9 +11,9 @@ const { updateUserDetails, submitQuestionnaireAnswers } = require('./controller/
 const { signIn, generateOtp, verifyOtp, setupTotp, generateQrCode, verifyTotp, checkTotpSetup , recordSignOutTime} = require('./controller/signinController');
 const { companySignUp } = require('./controller/companySignupController');
 const { createInquiry , deleteInquiry } = require('./controller/inquiryController');
-const { viewSingleInquiry, listAllInquiries } = require('./controller/inquiryController');
+const { viewSingleInquiry, listAllInquiries, listInquiriesByClient } = require('./controller/inquiryController');
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
-const { createTicket, deleteSingle, findTicketById, listAllTickets} = require('./controller/ticketController');
+const { createTicket, deleteSingle, findTicketById, listAllTickets, getClientTickets} = require('./controller/ticketController');
 const useragent = require('express-useragent');
 // const corsOptions = require('./config/corsOptions');
 require('dotenv').config();
@@ -127,6 +127,10 @@ app.post('/api/create-ticket', createTicket);
 app.delete('/api/ticket/:id', deleteSingle);
 app.get('/api/ticket/:id',findTicketById);
 app.get('/api/tickets',listAllTickets);
+app.get('/api/tickets/client/:clientId', getClientTickets);
+app.get('/api/client-inquiry/:clientId', listInquiriesByClient);
+
+
 app.all('*', (req, res) => {
     res.status(404).send("Error")
     // if (req.accepts('html')) {
