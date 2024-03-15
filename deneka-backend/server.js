@@ -14,6 +14,7 @@ const { createInquiry , deleteInquiry } = require('./controller/inquiryControlle
 const { viewSingleInquiry, listAllInquiries, listInquiriesByClient } = require('./controller/inquiryController');
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
 const { createTicket, deleteSingle, findTicketById, listAllTickets, getClientTickets} = require('./controller/ticketController');
+const { createCategory, deleteCategory} = require('./controller/categoryController');
 const useragent = require('express-useragent');
 // const corsOptions = require('./config/corsOptions');
 require('dotenv').config();
@@ -129,7 +130,8 @@ app.get('/api/ticket/:id',findTicketById);
 app.get('/api/tickets',listAllTickets);
 app.get('/api/tickets/client/:clientId', getClientTickets);
 app.get('/api/client-inquiry/:clientId', listInquiriesByClient);
-
+app.post('/api/category/create', createCategory);
+app.delete('/api/category/delete/:catId', deleteCategory);
 
 app.all('*', (req, res) => {
     res.status(404).send("Error")
