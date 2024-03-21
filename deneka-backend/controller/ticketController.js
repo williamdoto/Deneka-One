@@ -268,6 +268,60 @@ const getClientTickets = async (req, res) => {
   };
   
 
+  const createTicketProgress = async (req, res) => {
+    let connection = null;
+    try {
+        console.log("Trying connection");
+        const { ticketId, progressDescription, progressStatus, progressDate } = req.body;
 
-  module.exports = { createTicket, deleteSingle, findTicketById, listAllTickets, getClientTickets };
+        // Validation: Ensure required fields are provided
+        if (!ticketId || !progressDescription || !progressStatus || !progressDate) {
+            return res.status(400).json({ message: "Missing required fields." });
+        }
+
+        connection = snowflake.createConnection(connectionOptions);
+
+        await new Promise((resolve, reject) => {
+            connection.connect((err, conn) => {
+                if (err) {
+                    console.error('Unable to connect to Snowflake:', err);
+                    reject(err);
+                }
+                resolve(conn);
+            });
+        });
+
+        const query = `
+            INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.TICKET_PROGRESS
+                (TICKET_ID, PROGRESS_DATE, PROGRESS_DESCRIPTION, PROGRESS_STATUS)
+            VALUES
+                (?, ?, ?, ?);
+        `;
+
+        await new Promise((resolve, reject) => {
+            connection.execute({
+                sqlText: query,
+                binds: [ticketId, progressDate, progressDescription, progressStatus],
+                complete: (err, stmt, rows) => {
+                    if (err) {
+                        console.error('Failed to execute statement:', err);
+                        reject(err);
+                    }
+                    console.log('Ticket progress added:', rows);
+                    res.json({ message: "Ticket progress added successfully" });
+                    resolve(rows);
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error during ticket progress creation:', error);
+        res.status(500).json({ message: "Ticket progress creation failed due to an error." });
+    } finally {
+        if (connection) {
+            connection.destroy();
+        }
+    }
+};
+
+  module.exports = { createTicket, deleteSingle, findTicketById, listAllTickets, getClientTickets, createTicketProgress };
   
