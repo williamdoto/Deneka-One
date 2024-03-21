@@ -42,8 +42,8 @@ export const signOut = createAsyncThunk(
 );
 
 const initialState = {
-  isAuthenticated: false,
-  totpRequired: false,
+  isAuthenticated: true,
+  totpRequired: true,
   user: null,
 };
 
@@ -71,7 +71,7 @@ export const authSlice = createSlice({
     },
     checkAuth: (state) => {
       const token = localStorage.getItem('jwtToken');
-      state.isAuthenticated = !!token;
+      state.isAuthenticated = true;
     },
   },
   extraReducers: (builder) => {

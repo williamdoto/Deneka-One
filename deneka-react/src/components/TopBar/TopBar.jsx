@@ -100,7 +100,7 @@ const TopBar = () => {
             <BellOutlined />
           </button>
 
-        <Dropdown menu={{ items }}>
+        <Dropdown menu={{ menu }}>
           <button className={`icon-button profile-btn ${isDarkMode ? 'icon-button-dark' : ''}`}>
             <UserOutlined />
           </button>

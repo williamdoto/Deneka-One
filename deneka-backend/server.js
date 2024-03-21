@@ -16,6 +16,14 @@ const { requestReset, verifyResetToken, resetPassword } = require('./controller/
 const { createTicket, deleteSingle, findTicketById, listAllTickets, getClientTickets} = require('./controller/ticketController');
 const { createCategory, deleteCategory} = require('./controller/categoryController');
 const useragent = require('express-useragent');
+const cloudinary = require('cloudinary').v2; 
+
+
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' }); // Specify the destination folder where uploaded files will be stored temporarily
+const fs = require('fs');
+
+
 // const corsOptions = require('./config/corsOptions');
 require('dotenv').config();
 // const axios = require('axios');
@@ -86,6 +94,11 @@ app.use(cookieParser())
 app.use('/', express.static(path.join(__dirname, 'public')))
 
 app.use(useragent.express());
+cloudinary.config({
+    cloud_name: 'william@deneka.one',
+    api_key: '145145578795162',
+    api_secret: 'gSDp4MlcsT39UVlD6SutBA3z_HQ'
+});
 
 // define Routes
 app.use('/api', signupRoute)
@@ -132,6 +145,31 @@ app.get('/api/tickets/client/:clientId', getClientTickets);
 app.get('/api/client-inquiry/:clientId', listInquiriesByClient);
 app.post('/api/category/create', createCategory);
 app.delete('/api/category/delete/:catId', deleteCategory);
+
+// Use Multer middleware to handle file uploads
+app.post('/api/image', upload.single('image'), (req, res) => {
+    // At this point, Multer has processed the uploaded file and populated req.file
+    const file = req.file;
+    console.log(file)
+
+    // Check if file exists
+    if (!file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    // Upload image to Cloudinary
+    cloudinary.uploader.upload(file.path, (err, result) => {
+        // Delete the temporarily uploaded file
+        fs.unlinkSync(file.path);
+    
+        if (err) {
+            console.error('Error uploading image:', err);
+            return res.status(500).json({ error: 'Error uploading image' });
+        }
+        // Send the URL of the uploaded image back to the client
+        res.json({ imageUrl: result.secure_url });
+    });
+});
 
 app.all('*', (req, res) => {
     res.status(404).send("Error")
