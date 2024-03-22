@@ -322,6 +322,73 @@ const getClientTickets = async (req, res) => {
         }
     }
 };
+const createTicketComment = async (req, res) => {
+    let connection = null;
+    try {
+        console.log("Trying connection");
+        const { ticketId, comment, imageUrl } = req.body;
 
-  module.exports = { createTicket, deleteSingle, findTicketById, listAllTickets, getClientTickets, createTicketProgress };
+        // Validation: Ensure required fields are provided
+        if (!ticketId || !comment) {
+            return res.status(400).json({ message: "Missing required fields." });
+        }
+
+        const commentDate = new Date().toISOString(); // Get current date and time
+
+        connection = snowflake.createConnection(connectionOptions);
+
+        await new Promise((resolve, reject) => {
+            connection.connect((err, conn) => {
+                if (err) {
+                    console.error('Unable to connect to Snowflake:', err);
+                    reject(err);
+                }
+                resolve(conn);
+            });
+        });
+
+        const insertQuery = `
+            INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.TICKET_COMMENTS
+                (TICKET_ID, COMMENT_DATE, COMMENTS, IMAGE_URL)
+            VALUES
+                (?, ?, ?, ?);
+        `;
+
+        const binds = [ticketId, commentDate, comment];
+        if (imageUrl) {
+            binds.push(imageUrl);
+        } else {
+            binds.push(null); // Add null if imageUrl is not provided
+        }
+
+        await new Promise((resolve, reject) => {
+            connection.execute({
+                sqlText: insertQuery,
+                binds: binds,
+                complete: (err, stmt, rows) => {
+                    if (err) {
+                        console.error('Failed to execute statement:', err);
+                        reject(err);
+                    }
+                    console.log('Ticket comment added:', rows);
+                    res.json({ message: "Ticket comment added successfully" });
+                    resolve(rows);
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error during ticket comment creation:', error);
+        res.status(500).json({ message: "Ticket comment creation failed due to an error." });
+    } finally {
+        if (connection) {
+            connection.destroy();
+        }
+    }
+};
+
+
+
+
+
+  module.exports = { createTicket, deleteSingle, findTicketById, listAllTickets, getClientTickets, createTicketProgress, createTicketComment };
   
