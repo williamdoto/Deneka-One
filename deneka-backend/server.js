@@ -15,6 +15,7 @@ const { viewSingleInquiry, listAllInquiries, listInquiriesByClient } = require('
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
 const { createTicket, deleteSingle, findTicketById, listAllTickets, getClientTickets, createTicketProgress, createTicketComment} = require('./controller/ticketController');
 const { createCategory, deleteCategory} = require('./controller/categoryController');
+const {createTag, createTagAndAssociateWithTicket,associateTagWithTicket} = require('./controller/tagController');
 const useragent = require('express-useragent');
 const cloudinary = require('cloudinary').v2; 
 
@@ -147,6 +148,11 @@ app.post('/api/category/create', createCategory);
 app.delete('/api/category/delete/:catId', deleteCategory);
 app.post('/api/tickets/progress', createTicketProgress);
 app.post('/api/tickets/comments', createTicketComment);
+app.post('/api/tags', createTag);
+app.post('/api/tickets/tags', associateTagWithTicket);
+app.post('/api/tickets/tags/add', createTagAndAssociateWithTicket);
+
+
 
 // Use Multer middleware to handle file uploads
 app.post('/api/image', upload.single('image'), (req, res) => {
