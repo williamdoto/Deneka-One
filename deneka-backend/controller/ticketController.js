@@ -266,7 +266,7 @@ const getClientTickets = async (req, res) => {
         }
     }
   };
-  
+
 
   const createTicketProgress = async (req, res) => {
     let connection = null;
@@ -322,6 +322,7 @@ const getClientTickets = async (req, res) => {
         }
     }
 };
+
 const createTicketComment = async (req, res) => {
     let connection = null;
     try {
