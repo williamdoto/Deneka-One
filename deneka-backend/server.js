@@ -28,7 +28,8 @@ const fs = require('fs');
 AWS.config.update({
     accessKeyId: 'fc0f4d1e9a394cf5bf863ef7cbf38011',
     secretAccessKey: 'd0cccf5e0a3c4284b60009ef7dcc1d02',
-    // region: 'eu-west-1' // e.g., 'us-east-1'
+    region: 'de',
+    endpoint: 'https://s3.de.io.cloud.ovh.net/',
   });
 
   const s3 = new AWS.S3();
@@ -177,7 +178,7 @@ app.post('/api/tickets/tags/add', createTagAndAssociateWithTicket);
 const upload = multer({
     storage: multerS3({
       s3: s3,
-      bucket: 'https://deneka-one.s3.de.io.cloud.ovh.net/',
+      bucket: 'deneka-one',
       contentType: multerS3.AUTO_CONTENT_TYPE,
       acl: 'public-read', // Set appropriate permissions for uploaded files
       key: function (req, file, cb) {
