@@ -1,3 +1,6 @@
+const snowflake = require('snowflake-sdk');
+const { connectionOptions } = require('../config/snowflake');
+
 // Function to create a new client
 const createClient = async (req, res) => {
     let connection = snowflake.createConnection(connectionOptions);
