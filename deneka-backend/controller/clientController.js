@@ -1,10 +1,7 @@
-const snowflake = require('snowflake-sdk');
-const { connectionOptions } = require('../config/snowflake');
-
-// Function to create a new category
-const createCategory = async (req, res) => {
+// Function to create a new client
+const createClient = async (req, res) => {
     let connection = snowflake.createConnection(connectionOptions);
-    
+
     try {
         // Connect to Snowflake
         await new Promise((resolve, reject) => {
@@ -17,40 +14,42 @@ const createCategory = async (req, res) => {
             });
         });
 
-        const { catName, imageUrl } = req.body;
+        const { clientName, clientEmail, clientCity, clientStreet, clientCountry, clientPostcode, clientState, companyId, employeeId } = req.body;
 
         // Validation: Ensure all required fields are provided
-        if (!catName) {
-            return res.status(400).json({ message: "Missing required field: catName." });
+        if (!clientName || !clientEmail) {
+            return res.status(400).json({ message: "Missing required fields: clientName or clientEmail." });
         }
 
         // Define the SQL insert statement
         const insertSql = `
-            INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.CATEGORY (CAT_NAME, IMAGE_URL)
-            VALUES (?, ?);
+            INSERT INTO DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.CLIENT (
+                CLIENT_NAME, CLIENT_EMAIL, CLIENT_CITY, CLIENT_STREET, CLIENT_COUNTRY, CLIENT_POSTCODE, CLIENT_STATE, COMPANY_ID, EMPLOYEE_ID
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
         `;
 
         // Execute the insert statement
         await new Promise((resolve, reject) => {
             connection.execute({
                 sqlText: insertSql,
-                binds: [catName, imageUrl],
+                binds: [clientName, clientEmail, clientCity, clientStreet, clientCountry, clientPostcode, clientState, companyId, employeeId],
                 complete: (err, stmt, rows) => {
                     if (err) {
                         console.error('Failed to execute statement:', err);
                         reject(err);
                     }
-                    console.log('Category created:', rows);
+                    console.log('Client created:', rows);
                     resolve(rows);
                 }
             });
         });
 
         // Respond to the client indicating success
-        res.json({ message: "Category created successfully" });
+        res.json({ message: "Client created successfully" });
     } catch (error) {
-        console.error('Error during category creation:', error);
-        res.status(500).json({ message: "Category creation failed due to an error." });
+        console.error('Error during client creation:', error);
+        res.status(500).json({ message: "Client creation failed due to an error." });
     } finally {
         // Always close the connection
         if (connection) {
@@ -59,8 +58,8 @@ const createCategory = async (req, res) => {
     }
 };
 
-// Function to delete an existing category
-const deleteCategory = async (req, res) => {
+// Function to delete an existing client
+const deleteClient = async (req, res) => {
     let connection = snowflake.createConnection(connectionOptions);
 
     try {
@@ -75,35 +74,35 @@ const deleteCategory = async (req, res) => {
             });
         });
 
-        const { catId } = req.body; // Assuming the category ID is passed in the request body
+        const { clientId } = req.body; // Assuming the client ID is passed in the request body
 
         // Define the SQL delete statement
         const deleteSql = `
-            DELETE FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.CATEGORY
-            WHERE CAT_ID = ?;
+            DELETE FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.CLIENT
+            WHERE CLIENT_ID = ?;
         `;
 
         // Execute the delete statement
         await new Promise((resolve, reject) => {
             connection.execute({
                 sqlText: deleteSql,
-                binds: [catId],
+                binds: [clientId],
                 complete: (err, stmt, rows) => {
                     if (err) {
                         console.error('Failed to execute statement:', err);
                         reject(err);
                     }
-                    console.log('Category deleted:', rows);
+                    console.log('Client deleted:', rows);
                     resolve(rows);
                 }
             });
         });
 
         // Respond to the client indicating success
-        res.json({ message: "Category deleted successfully" });
+        res.json({ message: "Client deleted successfully" });
     } catch (error) {
-        console.error('Error during category deletion:', error);
-        res.status(500).json({ message: "Category deletion failed due to an error." });
+        console.error('Error during client deletion:', error);
+        res.status(500).json({ message: "Client deletion failed due to an error." });
     } finally {
         // Always close the connection
         if (connection) {
@@ -112,7 +111,8 @@ const deleteCategory = async (req, res) => {
     }
 };
 
-const viewAllCategories = async (req, res) => {
+// Function to view all clients
+const viewAllClients = async (req, res) => {
     let connection = snowflake.createConnection(connectionOptions);
 
     try {
@@ -129,8 +129,8 @@ const viewAllCategories = async (req, res) => {
 
         // Define the SQL select statement
         const selectSql = `
-            SELECT CAT_ID, CAT_NAME, IMAGE_URL
-            FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.CATEGORY;
+            SELECT *
+            FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.CLIENT;
         `;
 
         // Execute the select statement
@@ -142,15 +142,15 @@ const viewAllCategories = async (req, res) => {
                         console.error('Failed to execute statement:', err);
                         reject(err);
                     }
-                    console.log('Categories retrieved:', rows);
-                    res.json({ categories: rows });
+                    console.log('Clients retrieved:', rows);
+                    res.json({ clients: rows });
                     resolve();
                 }
             });
         });
     } catch (error) {
-        console.error('Error retrieving categories:', error);
-        res.status(500).json({ message: "Failed to retrieve categories due to an error." });
+        console.error('Error retrieving clients:', error);
+        res.status(500).json({ message: "Failed to retrieve clients due to an error." });
     } finally {
         // Always close the connection
         if (connection) {
@@ -159,8 +159,8 @@ const viewAllCategories = async (req, res) => {
     }
 };
 
-// Function to view a category by its ID
-const viewCategoryById = async (req, res) => {
+// Function to view a client by its ID
+const viewClientById = async (req, res) => {
     let connection = snowflake.createConnection(connectionOptions);
 
     try {
@@ -175,37 +175,37 @@ const viewCategoryById = async (req, res) => {
             });
         });
 
-        const { catId } = req.params; // Get the category ID from URL params
+        const { clientId } = req.params; // Get the client ID from URL params
 
         // Define the SQL select statement
         const selectSql = `
-            SELECT CAT_ID, CAT_NAME, IMAGE_URL
-            FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.CATEGORY
-            WHERE CAT_ID = ?;
+            SELECT *
+            FROM DASHBOARD_TEST_DATABASE.DASHBOARD_SIGNUP.CLIENT
+            WHERE CLIENT_ID = ?;
         `;
 
         // Execute the select statement
         await new Promise((resolve, reject) => {
             connection.execute({
                 sqlText: selectSql,
-                binds: [catId],
+                binds: [clientId],
                 complete: (err, stmt, rows) => {
                     if (err) {
                         console.error('Failed to execute statement:', err);
                         reject(err);
                     }
-                    console.log('Category retrieved:', rows);
+                    console.log('Client retrieved:', rows);
                     if (rows.length === 0) {
-                        return res.status(404).json({ message: "Category not found" });
+                        return res.status(404).json({ message: "Client not found" });
                     }
-                    res.json({ category: rows[0] });
+                    res.json({ client: rows[0] });
                     resolve();
                 }
             });
         });
     } catch (error) {
-        console.error('Error retrieving category:', error);
-        res.status(500).json({ message: "Failed to retrieve category due to an error." });
+        console.error('Error retrieving client:', error);
+        res.status(500).json({ message: "Failed to retrieve client due to an error." });
     } finally {
         // Always close the connection
         if (connection) {
@@ -214,7 +214,4 @@ const viewCategoryById = async (req, res) => {
     }
 };
 
-
-module.exports = { createCategory, deleteCategory, viewCategoryById, viewAllCategories };
-
-  
+module.exports = { createClient, deleteClient, viewAllClients, viewClientById };

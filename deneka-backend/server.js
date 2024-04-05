@@ -14,16 +14,24 @@ const { createInquiry , deleteInquiry } = require('./controller/inquiryControlle
 const { viewSingleInquiry, listAllInquiries, listInquiriesByClient } = require('./controller/inquiryController');
 const { requestReset, verifyResetToken, resetPassword } = require('./controller/resetPasswordController');
 const { createTicket, deleteSingle, findTicketById, listAllTickets, getClientTickets, createTicketProgress, createTicketComment} = require('./controller/ticketController');
-const { createCategory, deleteCategory} = require('./controller/categoryController');
+const { createCategory, deleteCategory, viewAllCategories, viewCategoryById} = require('./controller/categoryController');
 const {createTag, createTagAndAssociateWithTicket,associateTagWithTicket} = require('./controller/tagController');
+const { createClient, deleteClient, viewAllClients, viewClientById } = require('./controller/clientController');
 const useragent = require('express-useragent');
 const cloudinary = require('cloudinary').v2; 
 
-
+const AWS = require('aws-sdk');
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' }); // Specify the destination folder where uploaded files will be stored temporarily
+const multerS3 = require('multer-s3');
 const fs = require('fs');
 
+AWS.config.update({
+    accessKeyId: 'fc0f4d1e9a394cf5bf863ef7cbf38011',
+    secretAccessKey: 'd0cccf5e0a3c4284b60009ef7dcc1d02',
+    // region: 'eu-west-1' // e.g., 'us-east-1'
+  });
+
+  const s3 = new AWS.S3();
 
 // const corsOptions = require('./config/corsOptions');
 require('dotenv').config();
@@ -50,35 +58,35 @@ app.get('/auth/onedrive', (req, res) => {
 });
 
 
-app.get('/auth/onedrive/callback', async (req, res) => {
-  const code = req.query.code;
-  if (!code) {
-      return res.status(400).send('No code received from Microsoft');
-  }
+// app.get('/auth/onedrive/callback', async (req, res) => {
+//   const code = req.query.code;
+//   if (!code) {
+//       return res.status(400).send('No code received from Microsoft');
+//   }
 
-  try {
-      const response = await axios.post('https://login.microsoftonline.com/common/oauth2/v2.0/token', new URLSearchParams({
-          client_id: process.env.CLIENT_ID,
-          scope: 'https://graph.microsoft.com/.default',
-          client_secret: process.env.CLIENT_SECRET,
-          grant_type: 'authorization_code',
-          code: code,
-          redirect_uri: 'http://localhost:1337/auth/onedrive/callback'
-      }), {
-          headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-          }
-      });
+//   try {
+//       const response = await axios.post('https://login.microsoftonline.com/common/oauth2/v2.0/token', new URLSearchParams({
+//           client_id: process.env.CLIENT_ID,
+//           scope: 'https://graph.microsoft.com/.default',
+//           client_secret: process.env.CLIENT_SECRET,
+//           grant_type: 'authorization_code',
+//           code: code,
+//           redirect_uri: 'http://localhost:1337/auth/onedrive/callback'
+//       }), {
+//           headers: {
+//               'Content-Type': 'application/x-www-form-urlencoded'
+//           }
+//       });
 
-      const accessToken = response.data.access_token;
-      // Store access token in a secure place (session, database, etc.)
-      // And redirect user or send a response as needed
-      res.send('OneDrive access granted');
-  } catch (error) {
-      console.error("Error exchanging code for token: ", error);
-      res.status(500).send('Error during OneDrive authentication');
-  }
-});
+//       const accessToken = response.data.access_token;
+//       // Store access token in a secure place (session, database, etc.)
+//       // And redirect user or send a response as needed
+//       res.send('OneDrive access granted');
+//   } catch (error) {
+//       console.error("Error exchanging code for token: ", error);
+//       res.status(500).send('Error during OneDrive authentication');
+//   }
+// });
 
 
 
@@ -95,11 +103,14 @@ app.use(cookieParser())
 app.use('/', express.static(path.join(__dirname, 'public')))
 
 app.use(useragent.express());
-cloudinary.config({
-    cloud_name: 'william@deneka.one',
-    api_key: '145145578795162',
-    api_secret: 'gSDp4MlcsT39UVlD6SutBA3z_HQ'
-});
+// cloudinary.config({
+//     cloud_name: 'william@deneka.one',
+//     api_key: 145145578795162,
+//     api_secret: 'gSDp4MlcsT39UVlD6SutBA3z_HQ',
+//     secure:true
+// });
+
+// console.log(cloudinary.config())
 
 // define Routes
 app.use('/api', signupRoute)
@@ -137,6 +148,12 @@ app.get('/api/find-inquiry/:id', viewSingleInquiry);
 app.get('/api/view-inquiry', listAllInquiries);
 
 
+
+app.post('/api/create-client', createClient);
+app.get('/api/client/', viewAllClients);
+app.get('/api/client/:clientId', viewClientById);
+app.delete('/api/client/:clientId', deleteClient);
+
 app.post('/api/create-inquiry', createInquiry);
 app.post('/api/create-ticket', createTicket); 
 app.delete('/api/ticket/:id', deleteSingle);
@@ -146,6 +163,9 @@ app.get('/api/tickets/client/:clientId', getClientTickets);
 app.get('/api/client-inquiry/:clientId', listInquiriesByClient);
 app.post('/api/category/create', createCategory);
 app.delete('/api/category/delete/:catId', deleteCategory);
+app.get('/api/category', viewAllCategories);
+app.get('/api/category/:catId', viewCategoryById);
+
 app.post('/api/tickets/progress', createTicketProgress);
 app.post('/api/tickets/comments', createTicketComment);
 app.post('/api/tags', createTag);
@@ -154,30 +174,59 @@ app.post('/api/tickets/tags/add', createTagAndAssociateWithTicket);
 
 
 
-// Use Multer middleware to handle file uploads
-app.post('/api/image', upload.single('image'), (req, res) => {
-    // At this point, Multer has processed the uploaded file and populated req.file
-    const file = req.file;
-    console.log(file)
-
-    // Check if file exists
-    if (!file) {
-        return res.status(400).json({ error: 'No file uploaded' });
-    }
-
-    // Upload image to Cloudinary
-    cloudinary.uploader.upload(file.path, (err, result) => {
-        // Delete the temporarily uploaded file
-        fs.unlinkSync(file.path);
-    
-        if (err) {
-            console.error('Error uploading image:', err);
-            return res.status(500).json({ error: 'Error uploading image' });
-        }
-        // Send the URL of the uploaded image back to the client
-        res.json({ imageUrl: result.secure_url });
-    });
+const upload = multer({
+    storage: multerS3({
+      s3: s3,
+      bucket: 'https://deneka-one.s3.de.io.cloud.ovh.net/'
+      ',
+      contentType: multerS3.AUTO_CONTENT_TYPE,
+      acl: 'public-read', // Set appropriate permissions for uploaded files
+      key: function (req, file, cb) {
+        cb(null, Date.now().toString() + '-' + file.originalname); // Set unique key for each uploaded file
+      }
+    })
+  });
+  
+  // Define the endpoint for handling image uploads
+  app.post('/api/image', upload.single('image'), (req, res) => {
+    const file = req.file; // Access the uploaded file object
+    console.log(file);
+    res.json({ imageUrl: file.location }); // Return the URL of the uploaded image
 });
+
+
+
+
+// // Use Multer middleware to handle file uploads
+// app.post('/api/image', upload.single('image'), async (req, res) => {
+//     // At this point, Multer has processed the uploaded file and populated req.file
+//     const file = req.file;
+//     console.log(file);
+
+//     // Check if file exists
+//     if (!file) {
+//         return res.status(400).json({ error: 'No file uploaded' });
+//     }
+
+//     const options = {
+//         use_filename: true,
+//         unique_filename: false,
+//         overwrite: true,
+//       };
+
+//       try {
+//         // Upload the image
+//         const result = await cloudinary.uploader.upload(file.path, options);
+//         console.log(result);
+//         res.json({ imageUrl: result.secure_url });
+//         return result.public_id;
+//       } catch (error) {
+//         console.error(error);
+//       }
+
+// });
+
+// cloudinary.v2.uploader.unsigned_upload(file, upload_preset, options).then(callback);
 
 app.all('*', (req, res) => {
     res.status(404).send("Error")
