@@ -177,8 +177,7 @@ app.post('/api/tickets/tags/add', createTagAndAssociateWithTicket);
 const upload = multer({
     storage: multerS3({
       s3: s3,
-      bucket: 'https://deneka-one.s3.de.io.cloud.ovh.net/'
-      ',
+      bucket: 'https://deneka-one.s3.de.io.cloud.ovh.net/',
       contentType: multerS3.AUTO_CONTENT_TYPE,
       acl: 'public-read', // Set appropriate permissions for uploaded files
       key: function (req, file, cb) {
